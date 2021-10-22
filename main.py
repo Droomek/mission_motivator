@@ -7,7 +7,10 @@ from kivy.properties import StringProperty
 from kivy.lang import Builder
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from matplotlib import pyplot as plt
+from kivy.core.window import Window
 kivy.require ('1.4.0')
+
+Window.size = (360, 640)
 
 # calculations
 start_mission_date = date(2021, 7, 24)
