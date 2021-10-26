@@ -15,8 +15,8 @@
     font_size: 20
     color: (230/255,230/255,230/255,1)
     background_color: (97/255,131/255,88/255,1)
-
 <MainScreen>
+    name: "main"
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -55,6 +55,7 @@
 
 
 <SettingScreen>
+    name: "setting"
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -75,6 +76,10 @@
             text: "Data Wyjazdu"
         MyLabel:
             text: "Stopień etatatowy"
+        MyButton:
+            text: "Potwierdź"
+            size_hint: (1 , 1)
+            on_release: app.root.current = "main"
         BoxLayout:
             MyButton:
                 text: "Ustawienia"
