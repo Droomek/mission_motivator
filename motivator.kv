@@ -15,6 +15,12 @@
     font_size: 20
     color: (230/255,230/255,230/255,1)
     background_color: (97/255,131/255,88/255,1)
+
+<MySpinner@Spinner>
+    background_color: (.06, .06, .06, 1)
+    font_size: 24
+    size_hint: 1, .5
+
 <MainScreen>
     name: "main"
     BoxLayout:
@@ -62,14 +68,11 @@
         padding: 10
         spacing: 10
 
-        Spinner:
-            id: mission_id
-            background_color: (.06, .06, .06, 1)
-            font_size: 24
-            size_hint: 1, .5
+        MySpinner:
+            id: mission_spinner
             text: "Wybierz Misję"
             values: ["PKW Łotwa", "PKW Irak", "PKW Kosowo"]
-            on_text: root.mission_clicked(mission_id.text)
+            on_text: root.mission_clicked(mission_spinner.text)
         MyLabel:
             text: "Data Przyjazdu"
         MyLabel:
@@ -81,7 +84,7 @@
             size_hint: (1 , 1)
             on_release: 
                 app.root.current = "main"
-                root.manager.screens[0].ids.mission_label.text = root.ids.mission_id.text
+                root.manager.screens[0].ids.mission_label.text = root.ids.mission_spinner.text
         BoxLayout:
             MyButton:
                 text: "Ustawienia"
