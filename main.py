@@ -78,7 +78,6 @@ class SettingScreen(Screen):
     pass
     def mission_clicked(self, value):
         print(f"{value}")
-    #     self.ids.mission_label.txt = f"{value}"
         
 
 class Motivator(App):
