@@ -76,8 +76,10 @@ class MainScreen(Screen):
 # SettingScreen
 class SettingScreen(Screen):
     pass
-    def mission_clicked(self, value):
-        print(f"{value}")
+    def mission_clicked(self, mission):
+        print(f"{mission}")
+    def range_clicked(self, range):
+        print(f"{range}")
         
 
 class Motivator(App):
