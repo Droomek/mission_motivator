@@ -24,6 +24,7 @@
         spacing: 10
 
         MyLabel:
+            id: mission_label
             text: "Wybierz misję"
             font_size: 32
         MyLabel:
@@ -78,7 +79,9 @@
         MyButton:
             text: "Potwierdź"
             size_hint: (1 , 1)
-            on_release: app.root.current = "main"
+            on_release: 
+                app.root.current = "main"
+                root.manager.screens[0].ids.mission_label.text = root.ids.mission_id.text
         BoxLayout:
             MyButton:
                 text: "Ustawienia"
