@@ -79,8 +79,48 @@ class SettingScreen(Screen):
     def mission_clicked(self, mission):
         print(f"{mission}")
     def range_clicked(self, range):
-        print(f"{range}")
-        
+        rate = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
+        if range == "szer.":
+            print(rate[0])
+        elif range == "st. szer.":
+            print(rate[1])
+        elif range == "kpr.":
+            print(rate[2])
+        elif range == "st. kpr.":
+            print(rate[3])
+        elif range == "plut.":
+            print(rate[4])
+        elif range == "sierż.":
+            print(rate[5])
+        elif range == "st. sierż.":
+            print(rate[6])
+        elif range == "mł. chor.":
+            print(rate[7])
+        elif range == "chor.":
+            print(rate[8])
+        elif range == "st. chor.":
+            print(rate[9])
+        elif range == "st. chor. sztab.":
+            print(rate[10])
+        elif range == "ppor.":
+            print(rate[11])
+        elif range == "por.":
+            print(rate[12])
+        elif range == "kpt.":
+            print(rate[13])
+        elif range == "mjr":
+            print(rate[14])
+        elif range == "ppłk":
+            print(rate[15])
+        elif range == "płk":
+            print(rate[16])
+        elif range == "gen. bryg.":
+            print(rate[17])
+        elif range == "gen. dyw.":
+            print(rate[18])
+        else:
+            print(rate[19])
+
 
 class Motivator(App):
     def build(self):
