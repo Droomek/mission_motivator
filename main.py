@@ -24,10 +24,10 @@ mission_days = today - start_mission_date
 percent_remaning = int((remaining_mission_days.days * 100)/whole_mission_days.days)
 percent_mission = int(100 - percent_remaning)
 
-base_rate = 2.0
-multiplier = 4110 / 30
+base_rate = 4110 / 30
+mission_multiplier = 2.0 
 
-earning = base_rate * multiplier * mission_days.days
+earning = base_rate * mission_multiplier * mission_days.days
 
 # pie chart
 khaki = (97/255, 131/255, 88/255, 1)
@@ -79,47 +79,47 @@ class SettingScreen(Screen):
     def mission_clicked(self, mission):
         print(f"{mission}")
     def range_clicked(self, range):
-        rate = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
+        multipiler = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
         if range == "szer.":
-            print(rate[0])
+            print(multipiler[0] * base_rate * mission_days.days)
         elif range == "st. szer.":
-            print(rate[1])
+            print(multipiler[1] * base_rate * mission_days.days)
         elif range == "kpr.":
-            print(rate[2])
+            print(multipiler[2] * base_rate * mission_days.days)
         elif range == "st. kpr.":
-            print(rate[3])
+            print(multipiler[3] * base_rate * mission_days.days)
         elif range == "plut.":
-            print(rate[4])
+            print(multipiler[4] * base_rate * mission_days.days)
         elif range == "sierż.":
-            print(rate[5])
+            print(multipiler[5] * base_rate * mission_days.days)
         elif range == "st. sierż.":
-            print(rate[6])
+            print(multipiler[6] * base_rate * mission_days.days)
         elif range == "mł. chor.":
-            print(rate[7])
+            print(multipiler[7] * base_rate * mission_days.days)
         elif range == "chor.":
-            print(rate[8])
+            print(multipiler[8] * base_rate * mission_days.days)
         elif range == "st. chor.":
-            print(rate[9])
+            print(multipiler[9] * base_rate * mission_days.days)
         elif range == "st. chor. sztab.":
-            print(rate[10])
+            print(multipiler[10] * base_rate * mission_days.days)
         elif range == "ppor.":
-            print(rate[11])
+            print(multipiler[11] * base_rate * mission_days.days)
         elif range == "por.":
-            print(rate[12])
+            print(multipiler[12] * base_rate * mission_days.days)
         elif range == "kpt.":
-            print(rate[13])
+            print(multipiler[13] * base_rate * mission_days.days)
         elif range == "mjr":
-            print(rate[14])
+            print(multipiler[14] * base_rate * mission_days.days)
         elif range == "ppłk":
-            print(rate[15])
+            print(multipiler[15] * base_rate * mission_days.days)
         elif range == "płk":
-            print(rate[16])
+            print(multipiler[16] * base_rate * mission_days.days)
         elif range == "gen. bryg.":
-            print(rate[17])
+            print(multipiler[17] * base_rate * mission_days.days)
         elif range == "gen. dyw.":
-            print(rate[18])
+            print(multipiler[18] * base_rate * mission_days.days)
         else:
-            print(rate[19])
+            print(multipiler[19] * base_rate * mission_days.days)
 
 
 class Motivator(App):
