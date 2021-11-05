@@ -12,7 +12,7 @@ kivy.require ('1.4.0')
 
 Window.size = (360, 640)
 
-# calculations
+# calculations ---------------------------------------------------------------------------------------
 start_mission_date = date(2021, 7, 24)
 today = date.today()
 end_mission_date = date(2022, 1, 27)
@@ -24,12 +24,13 @@ mission_days = today - start_mission_date
 percent_remaning = int((remaining_mission_days.days * 100)/whole_mission_days.days)
 percent_mission = int(100 - percent_remaning)
 
-base_rate = 4110 / 30
+LOWEST_EARNIG = 4110
+base_rate = LOWEST_EARNIG / 30
 mission_multiplier = 2.0 
 
 earning = base_rate * mission_multiplier * mission_days.days
 
-# pie chart
+# pie chart ----------------------------------------------------------------------------------------
 khaki = (97/255, 131/255, 88/255, 1)
 grey =  (.06, .06, .06, 1)
 
@@ -53,10 +54,10 @@ fig.gca().add_artist(centre_circle)
 plt.text(0, .1, rmd, ha='center', color='white', fontsize=18)
 plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
 
-# kivy bulider
+# kivy bulider ------------------------------------------------------------------------------------------
 Builder.load_file('motivator.kv')
 
-
+# Main screen -------------------------------------------------------------------------------------------
 class MainScreen(Screen):
     today_data = StringProperty()
     mission_day = StringProperty()
@@ -72,54 +73,58 @@ class MainScreen(Screen):
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
     
 
-
-# SettingScreen
+# SettingScreen -----------------------------------------------------------------------------------------
 class SettingScreen(Screen):
     pass
     def mission_clicked(self, mission):
-        print(f"{mission}")
+        if mission == "PKW EUTM RCA" or mission == "PKW Irak" or mission == "PKW IRINI":
+            self.benefit = (LOWEST_EARNIG * 0.70) / 30
+        else:
+            self.benefit = 0
+        print (self.benefit)
     def range_clicked(self, range):
         multipiler = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
         if range == "szer.":
-            print(multipiler[0] * base_rate * mission_days.days)
+            self.multipiler = multipiler[0]
         elif range == "st. szer.":
-            print(multipiler[1] * base_rate * mission_days.days)
+            self.multipiler  = multipiler[1]
         elif range == "kpr.":
-            print(multipiler[2] * base_rate * mission_days.days)
+            self.multipiler = multipiler[2]
         elif range == "st. kpr.":
-            print(multipiler[3] * base_rate * mission_days.days)
+            self.multipiler = multipiler[3]
         elif range == "plut.":
-            print(multipiler[4] * base_rate * mission_days.days)
+            self.multipiler = multipiler[4]
         elif range == "sierż.":
-            print(multipiler[5] * base_rate * mission_days.days)
+            self.multipiler = multipiler[5]
         elif range == "st. sierż.":
-            print(multipiler[6] * base_rate * mission_days.days)
+            self.multipiler = multipiler[6]
         elif range == "mł. chor.":
-            print(multipiler[7] * base_rate * mission_days.days)
+            self.multipiler = multipiler[7]
         elif range == "chor.":
-            print(multipiler[8] * base_rate * mission_days.days)
+            self.multipiler = multipiler[8]
         elif range == "st. chor.":
-            print(multipiler[9] * base_rate * mission_days.days)
+            self.multipiler = multipiler[9]
         elif range == "st. chor. sztab.":
-            print(multipiler[10] * base_rate * mission_days.days)
+            self.multipiler = multipiler[10]
         elif range == "ppor.":
-            print(multipiler[11] * base_rate * mission_days.days)
+            self.multipiler = multipiler[11]
         elif range == "por.":
-            print(multipiler[12] * base_rate * mission_days.days)
+            self.multipiler = multipiler[12]
         elif range == "kpt.":
-            print(multipiler[13] * base_rate * mission_days.days)
+            self.multipiler = multipiler[13]
         elif range == "mjr":
-            print(multipiler[14] * base_rate * mission_days.days)
+            self.multipiler = multipiler[14]
         elif range == "ppłk":
-            print(multipiler[15] * base_rate * mission_days.days)
+            self.multipiler = multipiler[15]
         elif range == "płk":
-            print(multipiler[16] * base_rate * mission_days.days)
+            self.multipiler = multipiler[16]
         elif range == "gen. bryg.":
-            print(multipiler[17] * base_rate * mission_days.days)
+            self.multipiler = multipiler[17]
         elif range == "gen. dyw.":
-            print(multipiler[18] * base_rate * mission_days.days)
+            self.multipiler = multipiler[18]
         else:
-            print(multipiler[19] * base_rate * mission_days.days)
+            self.multipiler = multipiler[19]
+        print ((self.multipiler * base_rate * mission_days.days) + (mission_days.days * self.benefit))
 
 
 class Motivator(App):
