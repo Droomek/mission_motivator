@@ -77,6 +77,16 @@
             text: "Data Przyjazdu"
         MyLabel:
             text: "Data Wyjazdu"
+        GridLayout:
+            cols:2
+            MyLabel:
+                text:"Lekarz ze spec."
+            CheckBox:
+                on_active: root.checkbox_clicked(self, self.active, "doc_spec")
+            MyLabel:
+                text:"Lekarz"
+            CheckBox:
+                on_active: root.checkbox_clicked(self, self.active, "doc")
         MySpinner:
             id: range_spinner
             text: "Wybierz stopień etatowy"

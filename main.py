@@ -26,7 +26,8 @@ percent_mission = int(100 - percent_remaning)
 
 LOWEST_EARNIG = 4110
 base_rate = LOWEST_EARNIG / 30
-mission_multiplier = 2.0 
+mission_multiplier = 2.0
+doc_benefit = 0
 
 earning = base_rate * mission_multiplier * mission_days.days
 
@@ -75,13 +76,24 @@ class MainScreen(Screen):
 
 # SettingScreen -----------------------------------------------------------------------------------------
 class SettingScreen(Screen):
-    pass
+    
     def mission_clicked(self, mission):
         if mission == "PKW EUTM RCA" or mission == "PKW Irak" or mission == "PKW IRINI":
             self.benefit = (LOWEST_EARNIG * 0.70) / 30
         else:
             self.benefit = 0
         print (self.benefit)
+    
+    def checkbox_clicked(self, instance, value, doct):
+        global doc_benefit
+        if doct == "doc_spec" and value == True:
+            doc_benefit = (LOWEST_EARNIG * 2.5) / 30
+        elif doct == "doc" and value == True: 
+            doc_benefit = (LOWEST_EARNIG * 1.5) / 30
+        else:
+            doc_benefit = 0
+
+
     def range_clicked(self, range):
         multipiler = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
         if range == "szer.":
@@ -124,7 +136,8 @@ class SettingScreen(Screen):
             self.multipiler = multipiler[18]
         else:
             self.multipiler = multipiler[19]
-        print ((self.multipiler * base_rate * mission_days.days) + (mission_days.days * self.benefit))
+        
+        print ((self.multipiler * base_rate * mission_days.days) + (mission_days.days * self.benefit) + (mission_days.days * doc_benefit))
 
 
 class Motivator(App):
