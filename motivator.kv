@@ -82,11 +82,13 @@
             MyLabel:
                 text:"Lekarz ze spec."
             CheckBox:
+                group: "doctors"
                 id: check_spec
                 on_active: root.checkbox_clicked(self, self.active, "doc_spec")
             MyLabel:
                 text:"Lekarz"
             CheckBox:
+                group: "doctors"
                 id: check_doc
                 on_active: root.checkbox_clicked(self, self.active, "doc")
         MySpinner:
