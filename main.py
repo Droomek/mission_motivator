@@ -84,6 +84,10 @@ class SettingScreen(Screen):
             self.benefit = 0
         print (self.benefit)
     
+    def safe_clicked(self, mission, range, spec, doc):
+        mission_data = (mission, range, spec, doc)
+        print(mission_data)
+    
     def checkbox_clicked(self, instance, value, doct):
         global doc_benefit
         if doct == "doc_spec" and value == True:
