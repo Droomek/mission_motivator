@@ -1,5 +1,6 @@
 from datetime import date
-from os import name
+import os
+import sqlite3
 import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -85,8 +86,25 @@ class SettingScreen(Screen):
         print (self.benefit)
     
     def safe_clicked(self, mission, range, spec, doc):
-        mission_data = (mission, range, spec, doc)
-        print(mission_data)
+        if not os.path.isfile('mission_data.db'):
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("""CREATE TABLE mission_data (
+                    mission TEXT,
+                    range TEXT,
+                    specialist NUMERIC,
+                    doctor NUMERIC
+                )""")
+            c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?)", (mission, range, spec, doc) )
+            conn.commit()
+            conn.close()
+        else:
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?", (mission, range, spec, doc) )
+            conn.commit()
+            conn.close()
+
     
     def checkbox_clicked(self, instance, value, doct):
         global doc_benefit
