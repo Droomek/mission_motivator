@@ -76,6 +76,12 @@ class MainScreen(Screen):
         benefit = 0
         doc_benefit = 0
         multipiler_list = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
+        range_dict = {
+            "szer.": 1.50, "st. szer.":1.55,"kpr.": 1.60,"st. kpr.": 1.65,"plut.": 1.70,
+            "sierż.": 1.75,"st. sierż.": 1.80,"mł. chor.": 1.85,"chor.": 1.90,"st. chor.": 1.95,
+            "st. chor. sztab.": 2.00,"ppor.": 2.10,"por.": 2.30,"kpt.": 2.70,"mjr": 3.10,
+            "ppłk": 3.50,"płk": 3.80,"gen. bryg.": 5.00,"gen. dyw.": 5.50,"gen. bron.": 6.00
+            }
         if os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
@@ -87,46 +93,7 @@ class MainScreen(Screen):
                 spec = m_spec
                 doc = m_doc
             
-            if range == "szer.":
-                multipiler = multipiler_list[0]
-            elif range == "st. szer.":
-                multipiler  = multipiler_list[1]
-            elif range == "kpr.":
-                multipiler = multipiler_list[2]
-            elif range == "st. kpr.":
-                multipiler = multipiler_list[3]
-            elif range == "plut.":
-                multipiler = multipiler_list[4]
-            elif range == "sierż.":
-                multipiler = multipiler_list[5]
-            elif range == "st. sierż.":
-                multipiler = multipiler_list[6]
-            elif range == "mł. chor.":
-                multipiler = multipiler_list[7]
-            elif range == "chor.":
-                multipiler = multipiler_list[8]
-            elif range == "st. chor.":
-                multipiler = multipiler_list[9]
-            elif range == "st. chor. sztab.":
-                multipiler = multipiler_list[10]
-            elif range == "ppor.":
-                multipiler = multipiler_list[11]
-            elif range == "por.":
-                multipiler = multipiler_list[12]
-            elif range == "kpt.":
-                multipiler = multipiler_list[13]
-            elif range == "mjr":
-                multipiler = multipiler_list[14]
-            elif range == "ppłk":
-                multipiler = multipiler_list[15]
-            elif range == "płk":
-                multipiler = multipiler_list[16]
-            elif range == "gen. bryg.":
-                multipiler = multipiler_list[17]
-            elif range == "gen. dyw.":
-                multipiler = multipiler_list[18]
-            else:
-                multipiler = multipiler_list[19]
+            multipiler = range_dict[range]
             
             if mission == "PKW EUTM RCA" or mission == "PKW Irak" or mission == "PKW IRINI":
                 benefit = ((LOWEST_EARNIG * 0.70) / 30) * mission_days.days
