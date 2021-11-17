@@ -26,11 +26,7 @@ percent_remaning = int((remaining_mission_days.days * 100)/whole_mission_days.da
 percent_mission = int(100 - percent_remaning)
 
 LOWEST_EARNIG = 4110
-base_rate = LOWEST_EARNIG / 30
-mission_multiplier = 2.0
-doc_benefit = 0
 
-earning = base_rate * mission_multiplier * mission_days.days
 
 # pie chart ----------------------------------------------------------------------------------------
 khaki = (97/255, 131/255, 88/255, 1)
@@ -69,21 +65,96 @@ class MainScreen(Screen):
         super(MainScreen, self).__init__(**kwargs)
         self.today_data = f"{str(today)}"
         self.mission_day = f"{str(mission_days.days)} dzień z {str(whole_mission_days.days)} dni misji"
-        self.mission_earning = "{:.2f} zł".format(earning)
+        earning = MainScreen.m_earning()
+        self.mission_earning = "{:.2f} zł.".format(earning)
 
         chart = self.ids.chart
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-    
+      
+   
+    def m_earning():
+        benefit = 0
+        doc_benefit = 0
+        multipiler_list = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
+        if os.path.isfile('mission_data.db'):
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM mission_data")
+            items = c.fetchall()
+            for m_mission, m_range, m_spec, m_doc in items:
+                mission = m_mission
+                range = m_range
+                spec = m_spec
+                doc = m_doc
+            
+            if range == "szer.":
+                multipiler = multipiler_list[0]
+            elif range == "st. szer.":
+                multipiler  = multipiler_list[1]
+            elif range == "kpr.":
+                multipiler = multipiler_list[2]
+            elif range == "st. kpr.":
+                multipiler = multipiler_list[3]
+            elif range == "plut.":
+                multipiler = multipiler_list[4]
+            elif range == "sierż.":
+                multipiler = multipiler_list[5]
+            elif range == "st. sierż.":
+                multipiler = multipiler_list[6]
+            elif range == "mł. chor.":
+                multipiler = multipiler_list[7]
+            elif range == "chor.":
+                multipiler = multipiler_list[8]
+            elif range == "st. chor.":
+                multipiler = multipiler_list[9]
+            elif range == "st. chor. sztab.":
+                multipiler = multipiler_list[10]
+            elif range == "ppor.":
+                multipiler = multipiler_list[11]
+            elif range == "por.":
+                multipiler = multipiler_list[12]
+            elif range == "kpt.":
+                multipiler = multipiler_list[13]
+            elif range == "mjr":
+                multipiler = multipiler_list[14]
+            elif range == "ppłk":
+                multipiler = multipiler_list[15]
+            elif range == "płk":
+                multipiler = multipiler_list[16]
+            elif range == "gen. bryg.":
+                multipiler = multipiler_list[17]
+            elif range == "gen. dyw.":
+                multipiler = multipiler_list[18]
+            else:
+                multipiler = multipiler_list[19]
+            
+            if mission == "PKW EUTM RCA" or mission == "PKW Irak" or mission == "PKW IRINI":
+                benefit = ((LOWEST_EARNIG * 0.70) / 30) * mission_days.days
+            else:
+                benefit = 0
+            
+            if spec == 1:
+                doc_benefit = ((LOWEST_EARNIG * 2.5) / 30) * mission_days.days
+            elif doc == 1: 
+                doc_benefit = ((LOWEST_EARNIG * 1.5) / 30) * mission_days.days
+            else:
+                doc_benefit = 0
+
+            earning = ((LOWEST_EARNIG / 30) * multipiler * mission_days.days) + benefit + doc_benefit
+
+            conn.commit()
+            conn.close()
+        else:
+            earning = 0
+
+        return earning
+
 
 # SettingScreen -----------------------------------------------------------------------------------------
 class SettingScreen(Screen):
     
     def mission_clicked(self, mission):
-        if mission == "PKW EUTM RCA" or mission == "PKW Irak" or mission == "PKW IRINI":
-            self.benefit = (LOWEST_EARNIG * 0.70) / 30
-        else:
-            self.benefit = 0
-        print (self.benefit)
+        pass
     
     def safe_clicked(self, mission, range, spec, doc):
         if not os.path.isfile('mission_data.db'):
@@ -104,63 +175,18 @@ class SettingScreen(Screen):
             c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?", (mission, range, spec, doc) )
             conn.commit()
             conn.close()
+        
+        self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MainScreen.m_earning())
+        print("{:.2f} zł".format(MainScreen.m_earning()))
 
     
-    def checkbox_clicked(self, instance, value, doct):
-        global doc_benefit
-        if doct == "doc_spec" and value == True:
-            doc_benefit = (LOWEST_EARNIG * 2.5) / 30
-        elif doct == "doc" and value == True: 
-            doc_benefit = (LOWEST_EARNIG * 1.5) / 30
-        else:
-            doc_benefit = 0
+    def checkbox_clicked(self, instance, value):
+        pass
 
 
     def range_clicked(self, range):
-        multipiler = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
-        if range == "szer.":
-            self.multipiler = multipiler[0]
-        elif range == "st. szer.":
-            self.multipiler  = multipiler[1]
-        elif range == "kpr.":
-            self.multipiler = multipiler[2]
-        elif range == "st. kpr.":
-            self.multipiler = multipiler[3]
-        elif range == "plut.":
-            self.multipiler = multipiler[4]
-        elif range == "sierż.":
-            self.multipiler = multipiler[5]
-        elif range == "st. sierż.":
-            self.multipiler = multipiler[6]
-        elif range == "mł. chor.":
-            self.multipiler = multipiler[7]
-        elif range == "chor.":
-            self.multipiler = multipiler[8]
-        elif range == "st. chor.":
-            self.multipiler = multipiler[9]
-        elif range == "st. chor. sztab.":
-            self.multipiler = multipiler[10]
-        elif range == "ppor.":
-            self.multipiler = multipiler[11]
-        elif range == "por.":
-            self.multipiler = multipiler[12]
-        elif range == "kpt.":
-            self.multipiler = multipiler[13]
-        elif range == "mjr":
-            self.multipiler = multipiler[14]
-        elif range == "ppłk":
-            self.multipiler = multipiler[15]
-        elif range == "płk":
-            self.multipiler = multipiler[16]
-        elif range == "gen. bryg.":
-            self.multipiler = multipiler[17]
-        elif range == "gen. dyw.":
-            self.multipiler = multipiler[18]
-        else:
-            self.multipiler = multipiler[19]
+        pass
         
-        print ((self.multipiler * base_rate * mission_days.days) + (mission_days.days * self.benefit) + (mission_days.days * doc_benefit))
-
 
 class Motivator(App):
     def build(self):

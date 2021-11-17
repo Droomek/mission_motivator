@@ -47,6 +47,7 @@
         MyLabel:
             text: "Zarobiłeś:"
         MyLabel:
+            id : earning_label
             text: root.mission_earning
             font_size: 32
             color: (97/255,131/255,88/255,1)
@@ -84,13 +85,13 @@
             CheckBox:
                 group: "doctors"
                 id: check_spec
-                on_active: root.checkbox_clicked(self, self.active, "doc_spec")
+                on_active: root.checkbox_clicked(self, self.active)
             MyLabel:
                 text:"Lekarz"
             CheckBox:
                 group: "doctors"
                 id: check_doc
-                on_active: root.checkbox_clicked(self, self.active, "doc")
+                on_active: root.checkbox_clicked(self, self.active)
         MySpinner:
             id: range_spinner
             text: "Wybierz stopień etatowy"
@@ -99,10 +100,12 @@
         MyButton:
             text: "Potwierdź"
             size_hint: (1 , 1)
+            on_press:
+                root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active)
             on_release: 
                 app.root.current = "main"
                 root.manager.screens[0].ids.mission_label.text = root.ids.mission_spinner.text
-                root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active)
+                
         BoxLayout:
             MyButton:
                 text: "Ustawienia"
