@@ -17,9 +17,14 @@
     background_color: (97/255,131/255,88/255,1)
 
 <MySpinner@Spinner>
-    background_color: (.06, .06, .06, 1)
+    background_color: (.20, .20, .20, 1)
     font_size: 24
     size_hint: 1, .5
+
+<DataSpinner@Spinner>
+    background_color: (.20, .20, .20, 1)
+    font_size: 24
+    size_hint: .33, 1
 
 <MainScreen>
     name: "main"
@@ -75,9 +80,48 @@
             values: ["PKW EUFOR Althea","PKW EUTM RCA", "PKW Irak", "PKW IRINI", "PKW KFOR", "PKW Łotwa", "PKW Morze Północne", "PKW Orlik", "PKW Rumunia","PKW Turcja", "PKW UNIFIL"]
             on_text: root.mission_clicked(mission_spinner.text)
         MyLabel:
-            text: "Data Przyjazdu"
+            text: "Data Rozpoczęcia:"
+        BoxLayout:
+            size: root.width, root.height
+            padding: 0
+            spacing: 0
+            DataSpinner:
+                id: s_y_spinner
+                text: "R"
+                values: ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"]
+                on_text: root.start_year_clicked(s_y_spinner.text)
+            DataSpinner:
+                id: s_m_spinner
+                text: "M"
+                values: ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"]
+                on_text: root.start_month_clicked(s_m_spinner.text)
+            DataSpinner:
+                id: s_d_spinner
+                text: "D"
+                values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
+                on_text: root.start_day_clicked(s_d_spinner.text)
         MyLabel:
-            text: "Data Wyjazdu"
+            text: "Data Zakończenia:"
+        BoxLayout:
+            size: root.width, root.height
+            padding: 0
+            spacing: 0
+            DataSpinner:
+                id: e_y_spinner
+                text: "R"
+                values: ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"]
+                on_text: root.end_year_clicked(e_y_spinner.text)
+            DataSpinner:
+                id: e_m_spinner
+                text: "M"
+                values: ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"]
+                on_text: root.end_month_clicked(e_m_spinner.text)
+            DataSpinner:
+                id: e_d_spinner
+                text: "D"
+                values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
+                on_text: root.end_day_clicked(e_d_spinner.text)
+        
         MySpinner:
             id: range_spinner
             text: "Wybierz stopień etatowy"
@@ -102,10 +146,9 @@
             text: "Potwierdź"
             size_hint: (1 , 1)
             on_press:
-                root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active)
+                root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active, s_y_spinner.text, s_m_spinner.text, s_d_spinner.text)
             on_release: 
                 app.root.current = "main"
-                # root.manager.screens[0].ids.mission_label.text = root.ids.mission_spinner.text
                 
         BoxLayout:
             MyButton:

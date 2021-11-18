@@ -78,7 +78,7 @@ class MainScreen(Screen):
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            for m_mission, m_range, m_spec, m_doc in items:
+            for m_mission, m_range, m_spec, m_doc, s_year, s_month, s_day in items:
                 mission = m_mission
             
             conn.commit()
@@ -86,6 +86,27 @@ class MainScreen(Screen):
         else:
             mission = "Wybierz misję"
         return mission
+
+    def start_date():
+        if os.path.isfile('mission_data.db'):
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM mission_data")
+            items = c.fetchall()
+            for m_mission, m_range, m_spec, m_doc, s_year, s_month, s_day in items:
+                months_dict = {
+                    "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
+                    "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
+                year = int(s_year)
+                month = months_dict[s_month]
+                day = int(s_day)
+            s_date = (year, month, day)
+
+            conn.commit()
+            conn.close()
+        else:
+            s_date = date.today()
+        return s_date
    
     def m_earning():
         benefit = 0
@@ -101,7 +122,7 @@ class MainScreen(Screen):
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            for m_mission, m_range, m_spec, m_doc in items:
+            for m_mission, m_range, m_spec, m_doc, s_year, s_month, s_day in items:
                 mission = m_mission
                 range = m_range
                 spec = m_spec
@@ -136,8 +157,26 @@ class SettingScreen(Screen):
     
     def mission_clicked(self, mission):
         pass
+
+    def start_year_clicked(self, year):
+        pass
+
+    def start_month_clicked(self, month):
+        pass
+
+    def start_day_clicked(self, day):
+        pass
+
+    def end_year_clicked(self, year):
+        pass
+
+    def end_month_clicked(self, month):
+        pass
+
+    def end_day_clicked(self, day):
+        pass
     
-    def safe_clicked(self, mission, range, spec, doc):
+    def safe_clicked(self, mission, range, spec, doc, s_year, s_month, s_day):
         if not os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
@@ -145,20 +184,24 @@ class SettingScreen(Screen):
                     mission TEXT,
                     range TEXT,
                     specialist NUMERIC,
-                    doctor NUMERIC
+                    doctor NUMERIC,
+                    start_year TEXT,
+                    start_month TEXT,
+                    start_day TEXT
                 )""")
-            c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?)", (mission, range, spec, doc) )
+            c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?, ?)", (mission, range, spec, doc, s_year, s_month, s_day))
             conn.commit()
             conn.close()
         else:
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
-            c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?", (mission, range, spec, doc) )
+            c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?, start_year = ?, start_month = ?, start_day = ?", (mission, range, spec, doc, s_year, s_month, s_day) )
             conn.commit()
             conn.close()
         
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MainScreen.m_earning())
+        print(MainScreen.start_date())
     
     def checkbox_clicked(self, instance, value):
         pass
