@@ -19,7 +19,7 @@
 <MySpinner@Spinner>
     background_color: (.20, .20, .20, 1)
     font_size: 24
-    size_hint: 1, .5
+    size_hint: 1, 1
 
 <DataSpinner@Spinner>
     background_color: (.20, .20, .20, 1)
@@ -121,7 +121,6 @@
                 text: "D"
                 values: app.days_list
                 on_text: root.end_day_clicked(e_d_spinner.text)
-        
         MySpinner:
             id: range_spinner
             text: "Wybierz stopień etatowy"
