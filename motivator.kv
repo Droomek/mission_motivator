@@ -88,17 +88,17 @@
             DataSpinner:
                 id: s_y_spinner
                 text: "R"
-                values: ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"]
+                values: app.years_list
                 on_text: root.start_year_clicked(s_y_spinner.text)
             DataSpinner:
                 id: s_m_spinner
                 text: "M"
-                values: ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"]
+                values: app.months_list
                 on_text: root.start_month_clicked(s_m_spinner.text)
             DataSpinner:
                 id: s_d_spinner
                 text: "D"
-                values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
+                values: app.days_list
                 on_text: root.start_day_clicked(s_d_spinner.text)
         MyLabel:
             text: "Data Zakończenia:"
@@ -109,17 +109,17 @@
             DataSpinner:
                 id: e_y_spinner
                 text: "R"
-                values: ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"]
+                values: app.years_list
                 on_text: root.end_year_clicked(e_y_spinner.text)
             DataSpinner:
                 id: e_m_spinner
                 text: "M"
-                values: ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"]
+                values: app.months_list
                 on_text: root.end_month_clicked(e_m_spinner.text)
             DataSpinner:
                 id: e_d_spinner
                 text: "D"
-                values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
+                values: app.days_list
                 on_text: root.end_day_clicked(e_d_spinner.text)
         
         MySpinner:
