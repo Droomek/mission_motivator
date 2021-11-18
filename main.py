@@ -57,25 +57,39 @@ Builder.load_file('motivator.kv')
 
 # Main screen -------------------------------------------------------------------------------------------
 class MainScreen(Screen):
+    mission_type = StringProperty()
     today_data = StringProperty()
     mission_day = StringProperty()
     mission_earning = StringProperty()
 
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
+        self.mission_type = MainScreen.m_type()
         self.today_data = f"{str(today)}"
         self.mission_day = f"{str(mission_days.days)} dzień z {str(whole_mission_days.days)} dni misji"
-        earning = MainScreen.m_earning()
-        self.mission_earning = "{:.2f} zł.".format(earning)
+        self.mission_earning = "{:.2f} zł.".format(MainScreen.m_earning())
 
         chart = self.ids.chart
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-      
+
+    def m_type():
+        if os.path.isfile('mission_data.db'):
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM mission_data")
+            items = c.fetchall()
+            for m_mission, m_range, m_spec, m_doc in items:
+                mission = m_mission
+            
+            conn.commit()
+            conn.close()
+        else:
+            mission = "Wybierz misję"
+        return mission
    
     def m_earning():
         benefit = 0
         doc_benefit = 0
-        multipiler_list = [1.50, 1.55, 1.60, 1.65, 1.70, 1.75, 1.80, 1.85, 1.90, 1.95, 2.00, 2.10, 2.30, 2.70, 3.10, 3.50, 3.80, 5.00, 5.50, 6.00]
         range_dict = {
             "szer.": 1.50, "st. szer.":1.55,"kpr.": 1.60,"st. kpr.": 1.65,"plut.": 1.70,
             "sierż.": 1.75,"st. sierż.": 1.80,"mł. chor.": 1.85,"chor.": 1.90,"st. chor.": 1.95,
@@ -143,9 +157,8 @@ class SettingScreen(Screen):
             conn.commit()
             conn.close()
         
+        self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MainScreen.m_earning())
-        print("{:.2f} zł".format(MainScreen.m_earning()))
-
     
     def checkbox_clicked(self, instance, value):
         pass

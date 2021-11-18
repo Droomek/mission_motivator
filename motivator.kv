@@ -31,7 +31,7 @@
 
         MyLabel:
             id: mission_label
-            text: "Wybierz misję"
+            text: root.mission_type
             font_size: 32
         MyLabel:
             text: root.today_data
@@ -71,13 +71,18 @@
 
         MySpinner:
             id: mission_spinner
-            text: "Wybierz Misję"
+            text: "Wybierz misję"
             values: ["PKW EUFOR Althea","PKW EUTM RCA", "PKW Irak", "PKW IRINI", "PKW KFOR", "PKW Łotwa", "PKW Morze Północne", "PKW Orlik", "PKW Rumunia","PKW Turcja", "PKW UNIFIL"]
             on_text: root.mission_clicked(mission_spinner.text)
         MyLabel:
             text: "Data Przyjazdu"
         MyLabel:
             text: "Data Wyjazdu"
+        MySpinner:
+            id: range_spinner
+            text: "Wybierz stopień etatowy"
+            values: ["szer.", "st. szer.", "kpr.", "st. kpr.", "plut.", "sierż.", "st. sierż.", "mł. chor.", "chor.", "st. chor.", "st. chor. sztab.", "ppor.", "por.", "kpt.", "mjr", "ppłk", "płk", "gen. bryg.", "gen. dyw.", "gen. bron."]
+            on_text: root.range_clicked(range_spinner.text)
         GridLayout:
             cols:2
             MyLabel:
@@ -92,11 +97,7 @@
                 group: "doctors"
                 id: check_doc
                 on_active: root.checkbox_clicked(self, self.active)
-        MySpinner:
-            id: range_spinner
-            text: "Wybierz stopień etatowy"
-            values: ["szer.", "st. szer.", "kpr.", "st. kpr.", "plut.", "sierż.", "st. sierż.", "mł. chor.", "chor.", "st. chor.", "st. chor. sztab.", "ppor.", "por.", "kpt.", "mjr", "ppłk", "płk", "gen. bryg.", "gen. dyw.", "gen. bron."]
-            on_text: root.range_clicked(range_spinner.text)
+        
         MyButton:
             text: "Potwierdź"
             size_hint: (1 , 1)
@@ -104,7 +105,7 @@
                 root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active)
             on_release: 
                 app.root.current = "main"
-                root.manager.screens[0].ids.mission_label.text = root.ids.mission_spinner.text
+                # root.manager.screens[0].ids.mission_label.text = root.ids.mission_spinner.text
                 
         BoxLayout:
             MyButton:
