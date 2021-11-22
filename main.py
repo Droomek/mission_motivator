@@ -105,6 +105,26 @@ class MainScreen(Screen):
         else:
             s_date = date.today()
         return s_date
+    
+    def end_date():
+        if os.path.isfile('mission_data.db'):
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM mission_data")
+            items = c.fetchall()
+            months_dict = {
+                "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
+                "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
+            year = int(items[0][7])
+            month = months_dict[items[0][8]]
+            day = int(items[0][9])
+            e_date = (year, month, day)
+
+            conn.commit()
+            conn.close()
+        else:
+            e_date = date.today()
+        return e_date
    
     def m_earning():
         benefit = 0
@@ -173,7 +193,7 @@ class SettingScreen(Screen):
     def end_day_clicked(self, day):
         pass
     
-    def safe_clicked(self, mission, range, spec, doc, s_year, s_month, s_day):
+    def safe_clicked(self, mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day):
         if not os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
@@ -184,21 +204,25 @@ class SettingScreen(Screen):
                     doctor NUMERIC,
                     start_year TEXT,
                     start_month TEXT,
-                    start_day TEXT
+                    start_day TEXT,
+                    end_year TEXT,
+                    end_month TEXT,
+                    end_day TEXT
                 )""")
-            c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?, ?)", (mission, range, spec, doc, s_year, s_month, s_day))
+            c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day))
             conn.commit()
             conn.close()
         else:
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
-            c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?, start_year = ?, start_month = ?, start_day = ?", (mission, range, spec, doc, s_year, s_month, s_day) )
+            c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?, start_year = ?, start_month = ?, start_day = ?, end_year = ?, end_month = ?, end_day = ?", (mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day))
             conn.commit()
             conn.close()
         
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MainScreen.m_earning())
         print(MainScreen.start_date())
+        print(MainScreen.end_date())
     
     def checkbox_clicked(self, instance, value):
         pass
