@@ -78,8 +78,7 @@ class MainScreen(Screen):
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            for m_mission, m_range, m_spec, m_doc, s_year, s_month, s_day in items:
-                mission = m_mission
+            mission = items[0][0]
             
             conn.commit()
             conn.close()
@@ -93,13 +92,12 @@ class MainScreen(Screen):
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            for m_mission, m_range, m_spec, m_doc, s_year, s_month, s_day in items:
-                months_dict = {
-                    "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
-                    "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
-                year = int(s_year)
-                month = months_dict[s_month]
-                day = int(s_day)
+            months_dict = {
+                "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
+                "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
+            year = int(items[0][4])
+            month = months_dict[items[0][5]]
+            day = int(items[0][6])
             s_date = (year, month, day)
 
             conn.commit()
@@ -122,11 +120,10 @@ class MainScreen(Screen):
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            for m_mission, m_range, m_spec, m_doc, s_year, s_month, s_day in items:
-                mission = m_mission
-                range = m_range
-                spec = m_spec
-                doc = m_doc
+            mission = items[0][0]
+            range = items[0][1]
+            spec = items[0][2]
+            doc = items[0][3]
             
             multipiler = range_dict[range]
             
