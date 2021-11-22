@@ -15,6 +15,11 @@ kivy.require ('1.4.0')
 Window.size = (360, 640)
 
 # calculations ---------------------------------------------------------------------------------------
+LOWEST_EARNIG = 4110
+MONTHS_DICT = {
+    "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
+    "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
+
 start_mission_date = date(2021, 7, 24)
 today = date.today()
 end_mission_date = date(2022, 1, 27)
@@ -26,7 +31,7 @@ mission_days = today - start_mission_date
 percent_remaning = int((remaining_mission_days.days * 100)/whole_mission_days.days)
 percent_mission = int(100 - percent_remaning)
 
-LOWEST_EARNIG = 4110
+
 
 
 # pie chart ----------------------------------------------------------------------------------------
@@ -63,11 +68,8 @@ class MissionCalculations():
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            months_dict = {
-                "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
-                "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
             year = int(items[0][4])
-            month = months_dict[items[0][5]]
+            month = MONTHS_DICT[items[0][5]]
             day = int(items[0][6])
             s_date = date(year, month, day)
 
@@ -83,11 +85,8 @@ class MissionCalculations():
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            months_dict = {
-                "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
-                "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
             year = int(items[0][7])
-            month = months_dict[items[0][8]]
+            month = MONTHS_DICT[items[0][8]]
             day = int(items[0][9])
             e_date = date(year, month, day)
 
