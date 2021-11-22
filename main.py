@@ -1,5 +1,6 @@
 from datetime import date
 import os
+import re
 import sqlite3
 import kivy
 from kivy.app import App
@@ -55,37 +56,7 @@ plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
 # kivy bulider ------------------------------------------------------------------------------------------
 Builder.load_file('motivator.kv')
 
-# Main screen -------------------------------------------------------------------------------------------
-class MainScreen(Screen):
-    mission_type = StringProperty()
-    today_data = StringProperty()
-    mission_day = StringProperty()
-    mission_earning = StringProperty()
-
-    def __init__(self, **kwargs):
-        super(MainScreen, self).__init__(**kwargs)
-        self.mission_type = MainScreen.m_type()
-        self.today_data = f"{str(today)}"
-        self.mission_day = f"{str(mission_days.days)} dzień z {str(whole_mission_days.days)} dni misji"
-        self.mission_earning = "{:.2f} zł.".format(MainScreen.m_earning())
-
-        chart = self.ids.chart
-        chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-
-    def m_type():
-        if os.path.isfile('mission_data.db'):
-            conn = sqlite3.connect('mission_data.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM mission_data")
-            items = c.fetchall()
-            mission = items[0][0]
-            
-            conn.commit()
-            conn.close()
-        else:
-            mission = "Wybierz misję"
-        return mission
-
+class MissionCalculations():
     def start_date():
         if os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
@@ -98,7 +69,7 @@ class MainScreen(Screen):
             year = int(items[0][4])
             month = months_dict[items[0][5]]
             day = int(items[0][6])
-            s_date = (year, month, day)
+            s_date = date(year, month, day)
 
             conn.commit()
             conn.close()
@@ -118,14 +89,22 @@ class MainScreen(Screen):
             year = int(items[0][7])
             month = months_dict[items[0][8]]
             day = int(items[0][9])
-            e_date = (year, month, day)
+            e_date = date(year, month, day)
 
             conn.commit()
             conn.close()
         else:
             e_date = date.today()
         return e_date
-   
+    
+    def whole_days():
+        whole = MissionCalculations.end_date() - MissionCalculations.start_date()
+        all_days = int(whole.days)
+        if all_days > 0:
+            return all_days
+        else:
+            return -1
+
     def m_earning():
         benefit = 0
         doc_benefit = 0
@@ -167,6 +146,39 @@ class MainScreen(Screen):
             earning = 0
 
         return earning
+
+# Main screen -------------------------------------------------------------------------------------------
+class MainScreen(Screen):
+    mission_type = StringProperty()
+    today_data = StringProperty()
+    mission_day = StringProperty()
+    mission_earning = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(MainScreen, self).__init__(**kwargs)
+        self.mission_type = MainScreen.m_type()
+        self.today_data = f"{str(today)}"
+        self.mission_day = f"{str(mission_days.days)} dzień z {str(whole_mission_days.days)} dni misji"
+        self.mission_earning = "{:.2f} zł.".format(MissionCalculations.m_earning())
+
+        chart = self.ids.chart
+        chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+    def m_type():
+        if os.path.isfile('mission_data.db'):
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM mission_data")
+            items = c.fetchall()
+            mission = items[0][0]
+            
+            conn.commit()
+            conn.close()
+        else:
+            mission = "Wybierz misję"
+        return mission
+   
+
 
 
 # SettingScreen -----------------------------------------------------------------------------------------
@@ -220,9 +232,11 @@ class SettingScreen(Screen):
             conn.close()
         
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
-        self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MainScreen.m_earning())
-        print(MainScreen.start_date())
-        print(MainScreen.end_date())
+        self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
+        # delete before production
+        print(MissionCalculations.start_date())
+        print(MissionCalculations.end_date())
+        print(MissionCalculations.whole_days())
     
     def checkbox_clicked(self, instance, value):
         pass
