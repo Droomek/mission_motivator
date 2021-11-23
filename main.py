@@ -32,8 +32,6 @@ percent_remaning = int((remaining_mission_days.days * 100)/whole_mission_days.da
 percent_mission = int(100 - percent_remaning)
 
 
-
-
 # pie chart ----------------------------------------------------------------------------------------
 khaki = (97/255, 131/255, 88/255, 1)
 grey =  (.06, .06, .06, 1)
@@ -48,7 +46,7 @@ if rmd == '1':
 else:
     days = "dni"
 
-plt.figure(facecolor= grey)
+plt.figure(facecolor = grey)
 plt.title('Pozostało:', color='white', fontsize=17)
 
 plt.pie(slices, labels=labels, textprops={'color': 'white', 'fontsize':15}, colors=colors, startangle= 90, counterclock=False, labeldistance=1.1)
@@ -58,8 +56,7 @@ fig.gca().add_artist(centre_circle)
 plt.text(0, .1, rmd, ha='center', color='white', fontsize=18)
 plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
 
-# kivy bulider ------------------------------------------------------------------------------------------
-Builder.load_file('motivator.kv')
+
 
 class MissionCalculations():
     def start_date():
@@ -103,11 +100,19 @@ class MissionCalculations():
             return all_days
         else:
             return -1
+    
+    def remaning_days():
+        rem_days = MissionCalculations.end_date() - date.today()
+        r_days = int(rem_days.days)
+        if r_days > 0:
+            return  r_days
+        else:
+            return -1
 
     def m_earning():
         benefit = 0
         doc_benefit = 0
-        range_dict = {
+        range_dict = {"Wybierz stopień etatowy": 0,
             "szer.": 1.50, "st. szer.":1.55,"kpr.": 1.60,"st. kpr.": 1.65,"plut.": 1.70,
             "sierż.": 1.75,"st. sierż.": 1.80,"mł. chor.": 1.85,"chor.": 1.90,"st. chor.": 1.95,
             "st. chor. sztab.": 2.00,"ppor.": 2.10,"por.": 2.30,"kpt.": 2.70,"mjr": 3.10,
@@ -146,6 +151,9 @@ class MissionCalculations():
 
         return earning
 
+# kivy bulider ------------------------------------------------------------------------------------------
+Builder.load_file('motivator.kv')
+
 # Main screen -------------------------------------------------------------------------------------------
 class MainScreen(Screen):
     mission_type = StringProperty()
@@ -158,7 +166,7 @@ class MainScreen(Screen):
         self.mission_type = MainScreen.m_type()
         self.today_data = f"{str(today)}"
         if MissionCalculations.whole_days() == -1:
-            self.mission_day = "Wybiesz datę"
+            self.mission_day = "Wybierz datę"
         else:
             self.mission_day = f"{str(mission_days.days)} dzień z {str(MissionCalculations.whole_days())} dni misji"
         self.mission_earning = "{:.2f} zł.".format(MissionCalculations.m_earning())
@@ -235,11 +243,15 @@ class SettingScreen(Screen):
         
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
-        self.manager.screens[0].ids.mission_day_label.text = f"{str(mission_days.days)} dzień z {str(MissionCalculations.whole_days())} dni misji"
+        if MissionCalculations.whole_days() == -1:
+            self.mission_day = "Wybierz datę"
+        else:
+            self.manager.screens[0].ids.mission_day_label.text = f"{str(mission_days.days)} dzień z {str(MissionCalculations.whole_days())} dni misji"
         # delete before production
         print(MissionCalculations.start_date())
         print(MissionCalculations.end_date())
         print(MissionCalculations.whole_days())
+        print(MissionCalculations.remaning_days())
     
     def checkbox_clicked(self, instance, value):
         pass

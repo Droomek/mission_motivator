@@ -88,17 +88,17 @@
             spacing: 0
             DataSpinner:
                 id: s_y_spinner
-                text: "R"
+                text: "2021"
                 values: app.years_list
                 on_text: root.start_year_clicked(s_y_spinner.text)
             DataSpinner:
                 id: s_m_spinner
-                text: "M"
+                text: "Sty"
                 values: app.months_list
                 on_text: root.start_month_clicked(s_m_spinner.text)
             DataSpinner:
                 id: s_d_spinner
-                text: "D"
+                text: "1"
                 values: app.days_list
                 on_text: root.start_day_clicked(s_d_spinner.text)
         MyLabel:
@@ -109,23 +109,23 @@
             spacing: 0
             DataSpinner:
                 id: e_y_spinner
-                text: "R"
+                text: "2021"
                 values: app.years_list
                 on_text: root.end_year_clicked(e_y_spinner.text)
             DataSpinner:
                 id: e_m_spinner
-                text: "M"
+                text: "Sty"
                 values: app.months_list
                 on_text: root.end_month_clicked(e_m_spinner.text)
             DataSpinner:
                 id: e_d_spinner
-                text: "D"
+                text: "1"
                 values: app.days_list
                 on_text: root.end_day_clicked(e_d_spinner.text)
         MySpinner:
             id: range_spinner
             text: "Wybierz stopień etatowy"
-            values: ["szer.", "st. szer.", "kpr.", "st. kpr.", "plut.", "sierż.", "st. sierż.", "mł. chor.", "chor.", "st. chor.", "st. chor. sztab.", "ppor.", "por.", "kpt.", "mjr", "ppłk", "płk", "gen. bryg.", "gen. dyw.", "gen. bron."]
+            values: ["Wybierz stopień etatowy", "szer.", "st. szer.", "kpr.", "st. kpr.", "plut.", "sierż.", "st. sierż.", "mł. chor.", "chor.", "st. chor.", "st. chor. sztab.", "ppor.", "por.", "kpt.", "mjr", "ppłk", "płk", "gen. bryg.", "gen. dyw.", "gen. bron."]
             on_text: root.range_clicked(range_spinner.text)
         GridLayout:
             cols:2
