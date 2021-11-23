@@ -157,7 +157,10 @@ class MainScreen(Screen):
         super(MainScreen, self).__init__(**kwargs)
         self.mission_type = MainScreen.m_type()
         self.today_data = f"{str(today)}"
-        self.mission_day = f"{str(mission_days.days)} dzień z {str(whole_mission_days.days)} dni misji"
+        if MissionCalculations.whole_days() == -1:
+            self.mission_day = "Wybiesz datę"
+        else:
+            self.mission_day = f"{str(mission_days.days)} dzień z {str(MissionCalculations.whole_days())} dni misji"
         self.mission_earning = "{:.2f} zł.".format(MissionCalculations.m_earning())
 
         chart = self.ids.chart
@@ -232,6 +235,7 @@ class SettingScreen(Screen):
         
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
+        self.manager.screens[0].ids.mission_day_label.text = f"{str(mission_days.days)} dzień z {str(MissionCalculations.whole_days())} dni misji"
         # delete before production
         print(MissionCalculations.start_date())
         print(MissionCalculations.end_date())
