@@ -14,48 +14,10 @@ kivy.require ('1.4.0')
 
 Window.size = (360, 640)
 
-# calculations ---------------------------------------------------------------------------------------
-LOWEST_EARNIG = 4110
+LOWEST_EARNING = 4110
 MONTHS_DICT = {
     "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
     "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
-
-start_mission_date = date(2021, 7, 24)
-today = date.today()
-end_mission_date = date(2022, 1, 27)
-
-whole_mission_days = end_mission_date - start_mission_date
-remaining_mission_days = end_mission_date - today
-mission_days = today - start_mission_date
-
-percent_remaning = int((remaining_mission_days.days * 100)/whole_mission_days.days)
-percent_mission = int(100 - percent_remaning)
-
-
-# pie chart ----------------------------------------------------------------------------------------
-khaki = (97/255, 131/255, 88/255, 1)
-grey =  (.06, .06, .06, 1)
-
-slices = [percent_mission, percent_remaning]
-labels = ["", f"{percent_remaning}%"]
-colors = [grey, khaki]
-rmd = str(remaining_mission_days.days)
-
-if rmd == '1':
-    days = "dzień"
-else:
-    days = "dni"
-
-plt.figure(facecolor = grey)
-plt.title('Pozostało:', color='white', fontsize=17)
-
-plt.pie(slices, labels=labels, textprops={'color': 'white', 'fontsize':15}, colors=colors, startangle= 90, counterclock=False, labeldistance=1.1)
-centre_circle =plt.Circle((0, 0), 0.80, fc=grey)
-fig = plt.gcf()
-fig.gca().add_artist(centre_circle)
-plt.text(0, .1, rmd, ha='center', color='white', fontsize=18)
-plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
-
 
 
 class MissionCalculations():
@@ -108,6 +70,14 @@ class MissionCalculations():
             return  r_days
         else:
             return -1
+    
+    def mission_day():
+        mis_day = date.today() - MissionCalculations.start_date()
+        m_days = int(mis_day.days)
+        if m_days > 0:
+            return  m_days
+        else:
+            return -1
 
     def m_earning():
         benefit = 0
@@ -131,18 +101,18 @@ class MissionCalculations():
             multipiler = range_dict[range]
             
             if mission == "PKW EUTM RCA" or mission == "PKW Irak" or mission == "PKW IRINI":
-                benefit = ((LOWEST_EARNIG * 0.70) / 30) * mission_days.days
+                benefit = ((LOWEST_EARNING * 0.70) / 30) * MissionCalculations.mission_day()
             else:
                 benefit = 0
             
             if spec == 1:
-                doc_benefit = ((LOWEST_EARNIG * 2.5) / 30) * mission_days.days
+                doc_benefit = ((LOWEST_EARNING * 2.5) / 30) * MissionCalculations.mission_day()
             elif doc == 1: 
-                doc_benefit = ((LOWEST_EARNIG * 1.5) / 30) * mission_days.days
+                doc_benefit = ((LOWEST_EARNING * 1.5) / 30) * MissionCalculations.mission_day()
             else:
                 doc_benefit = 0
 
-            earning = ((LOWEST_EARNIG / 30) * multipiler * mission_days.days) + benefit + doc_benefit
+            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + benefit + doc_benefit
 
             conn.commit()
             conn.close()
@@ -160,15 +130,45 @@ class MainScreen(Screen):
     today_data = StringProperty()
     mission_day = StringProperty()
     mission_earning = StringProperty()
+    
+# pie chart ----------------------------------------------------------------------------------------
+    
+    percent_remaning = int((MissionCalculations.remaning_days() * 100)/MissionCalculations.whole_days())
+    percent_mission = int(100 - percent_remaning)
+    remaining_mission_days = MissionCalculations.end_date() - date.today()
+    
+    khaki = (97/255, 131/255, 88/255, 1)
+    grey =  (.06, .06, .06, 1)
+
+    slices = [percent_mission, percent_remaning]
+    labels = ["", f"{percent_remaning}%"]
+    colors = [grey, khaki]
+    rmd = str(remaining_mission_days.days)
+
+    if rmd == '1':
+        days = "dzień"
+    else:
+        days = "dni"
+
+    plt.figure(facecolor = grey)
+    plt.title('Pozostało:', color='white', fontsize=17)
+
+    plt.pie(slices, labels=labels, textprops={'color': 'white', 'fontsize':15}, colors=colors, startangle= 90, counterclock=False, labeldistance=1.1)
+    centre_circle =plt.Circle((0, 0), 0.80, fc=grey)
+    fig = plt.gcf()
+    fig.gca().add_artist(centre_circle)
+    plt.text(0, .1, rmd, ha='center', color='white', fontsize=18)
+    plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
+    
 
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
         self.mission_type = MainScreen.m_type()
-        self.today_data = f"{str(today)}"
+        self.today_data = f"{str(date.today())}"
         if MissionCalculations.whole_days() == -1:
             self.mission_day = "Wybierz datę"
         else:
-            self.mission_day = f"{str(mission_days.days)} dzień z {str(MissionCalculations.whole_days())} dni misji"
+            self.mission_day = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         self.mission_earning = "{:.2f} zł.".format(MissionCalculations.m_earning())
 
         chart = self.ids.chart
@@ -246,12 +246,13 @@ class SettingScreen(Screen):
         if MissionCalculations.whole_days() == -1:
             self.mission_day = "Wybierz datę"
         else:
-            self.manager.screens[0].ids.mission_day_label.text = f"{str(mission_days.days)} dzień z {str(MissionCalculations.whole_days())} dni misji"
+            self.manager.screens[0].ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         # delete before production
         print(MissionCalculations.start_date())
         print(MissionCalculations.end_date())
         print(MissionCalculations.whole_days())
         print(MissionCalculations.remaning_days())
+        print(MissionCalculations.mission_day())
     
     def checkbox_clicked(self, instance, value):
         pass
