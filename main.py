@@ -1,6 +1,5 @@
 from datetime import date
 import os
-import re
 import sqlite3
 import kivy
 from kivy.app import App
@@ -20,7 +19,8 @@ MONTHS_DICT = {
     "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
 
 
-class MissionCalculations():
+class MissionCalculations(ScreenManager):
+ 
     def start_date():
         if os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
@@ -132,10 +132,15 @@ class MainScreen(Screen):
     mission_earning = StringProperty()
     
 # pie chart ----------------------------------------------------------------------------------------
-    
-    percent_remaning = int((MissionCalculations.remaning_days() * 100)/MissionCalculations.whole_days())
-    percent_mission = int(100 - percent_remaning)
-    remaining_mission_days = MissionCalculations.end_date() - date.today()
+
+    if MissionCalculations.whole_days() <= 0:
+        percent_remaning = 0
+        percent_mission = 0
+        rmd = 0
+    else:
+        percent_remaning = int((MissionCalculations.remaning_days() * 100)/MissionCalculations.whole_days())
+        percent_mission = int(100 - percent_remaning)
+        rmd = str(MissionCalculations.remaning_days())
     
     khaki = (97/255, 131/255, 88/255, 1)
     grey =  (.06, .06, .06, 1)
@@ -143,7 +148,7 @@ class MainScreen(Screen):
     slices = [percent_mission, percent_remaning]
     labels = ["", f"{percent_remaning}%"]
     colors = [grey, khaki]
-    rmd = str(remaining_mission_days.days)
+    
 
     if rmd == '1':
         days = "dzień"
@@ -216,6 +221,7 @@ class SettingScreen(Screen):
         pass
     
     def safe_clicked(self, mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day):
+       
         if not os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
@@ -247,12 +253,14 @@ class SettingScreen(Screen):
             self.mission_day = "Wybierz datę"
         else:
             self.manager.screens[0].ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
+        
         # delete before production
-        print(MissionCalculations.start_date())
-        print(MissionCalculations.end_date())
-        print(MissionCalculations.whole_days())
-        print(MissionCalculations.remaning_days())
-        print(MissionCalculations.mission_day())
+        # print(MissionCalculations.start_date())
+        # print(MissionCalculations.end_date())
+        # print(MissionCalculations.whole_days())
+        # print(MissionCalculations.remaning_days())
+        # print(MissionCalculations.mission_day())
+        # print (f"{self.manager.screens[1].ids.s_y_spinner.text}")
     
     def checkbox_clicked(self, instance, value):
         pass
@@ -272,7 +280,6 @@ class Motivator(App):
         sm.add_widget(MainScreen(name='main'))
         sm.add_widget(SettingScreen(name='settings'))
         return sm
-
 
 if __name__ == '__main__':
     Motivator().run()
