@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import os
 import sqlite3
 import kivy
@@ -20,22 +20,17 @@ MONTHS_DICT = {
 
 
 class MissionCalculations(ScreenManager):
- 
+    
     def start_date():
         if os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            year = int(items[0][4])
-            month = MONTHS_DICT[items[0][5]]
-            day = int(items[0][6])
-            s_date = date(year, month, day)
-
-            conn.commit()
+            s_date = datetime.strptime(items[0][4], '%Y-%m-%d').date()
             conn.close()
         else:
-            s_date = date.today()
+             s_date = date.today()
         return s_date
     
     def end_date():
@@ -44,15 +39,10 @@ class MissionCalculations(ScreenManager):
             c = conn.cursor()
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
-            year = int(items[0][7])
-            month = MONTHS_DICT[items[0][8]]
-            day = int(items[0][9])
-            e_date = date(year, month, day)
-
-            conn.commit()
+            e_date = datetime.strptime(items[0][5], '%Y-%m-%d').date()
             conn.close()
         else:
-            e_date = date.today()
+             e_date = date.today()
         return e_date
     
     def whole_days():
@@ -193,9 +183,6 @@ class MainScreen(Screen):
             mission = "Wybierz misję"
         return mission
    
-
-
-
 # SettingScreen -----------------------------------------------------------------------------------------
 class SettingScreen(Screen):
     
@@ -221,7 +208,8 @@ class SettingScreen(Screen):
         pass
     
     def safe_clicked(self, mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day):
-       
+        start_date = date(int(s_year), MONTHS_DICT[s_month], int(s_day))
+        end_date = date(int(e_year), MONTHS_DICT[e_month], int(e_day))
         if not os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
@@ -230,20 +218,16 @@ class SettingScreen(Screen):
                     range TEXT,
                     specialist NUMERIC,
                     doctor NUMERIC,
-                    start_year TEXT,
-                    start_month TEXT,
-                    start_day TEXT,
-                    end_year TEXT,
-                    end_month TEXT,
-                    end_day TEXT
+                    start_date TEXT,
+                    end_date TEXT
                 )""")
-            c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day))
+            c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?)", (mission, range, spec, doc, start_date, end_date))
             conn.commit()
             conn.close()
         else:
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
-            c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?, start_year = ?, start_month = ?, start_day = ?, end_year = ?, end_month = ?, end_day = ?", (mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day))
+            c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?, start_date = ?, end_date = ?", (mission, range, spec, doc, start_date, end_date))
             conn.commit()
             conn.close()
         
@@ -254,13 +238,12 @@ class SettingScreen(Screen):
         else:
             self.manager.screens[0].ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         
-        # delete before production
-        # print(MissionCalculations.start_date())
-        # print(MissionCalculations.end_date())
-        # print(MissionCalculations.whole_days())
-        # print(MissionCalculations.remaning_days())
-        # print(MissionCalculations.mission_day())
-        # print (f"{self.manager.screens[1].ids.s_y_spinner.text}")
+        # TODO delete before production" 
+        # print (start_date)
+        # print(type(start_date))
+        # print (end_date)
+        # print(type(end_date))
+
     
     def checkbox_clicked(self, instance, value):
         pass
