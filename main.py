@@ -121,40 +121,6 @@ class MainScreen(Screen):
     mission_day = StringProperty()
     mission_earning = StringProperty()
     
-# pie chart ----------------------------------------------------------------------------------------
-
-    if MissionCalculations.whole_days() <= 0:
-        percent_remaning = 0
-        percent_mission = 0
-        rmd = 0
-    else:
-        percent_remaning = int((MissionCalculations.remaning_days() * 100)/MissionCalculations.whole_days())
-        percent_mission = int(100 - percent_remaning)
-        rmd = str(MissionCalculations.remaning_days())
-    
-    khaki = (97/255, 131/255, 88/255, 1)
-    grey =  (.06, .06, .06, 1)
-
-    slices = [percent_mission, percent_remaning]
-    labels = ["", f"{percent_remaning}%"]
-    colors = [grey, khaki]
-    
-
-    if rmd == '1':
-        days = "dzień"
-    else:
-        days = "dni"
-
-    plt.figure(facecolor = grey)
-    plt.title('Pozostało:', color='white', fontsize=17)
-
-    plt.pie(slices, labels=labels, textprops={'color': 'white', 'fontsize':15}, colors=colors, startangle= 90, counterclock=False, labeldistance=1.1)
-    centre_circle =plt.Circle((0, 0), 0.80, fc=grey)
-    fig = plt.gcf()
-    fig.gca().add_artist(centre_circle)
-    plt.text(0, .1, rmd, ha='center', color='white', fontsize=18)
-    plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
-    
 
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
@@ -165,9 +131,41 @@ class MainScreen(Screen):
         else:
             self.mission_day = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         self.mission_earning = "{:.2f} zł.".format(MissionCalculations.m_earning())
+        
+        if os.path.isfile('mission_data.db'):
+            MainScreen.pie_chart()
+            chart = self.ids.chart
+            chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+    
+    def pie_chart():
 
-        chart = self.ids.chart
-        chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        percent_remaning = int((MissionCalculations.remaning_days() * 100)/MissionCalculations.whole_days())
+        percent_mission = int(100 - percent_remaning)
+        rmd = str(MissionCalculations.remaning_days())
+        
+        khaki = (97/255, 131/255, 88/255, 1)
+        grey =  (.06, .06, .06, 1)
+
+        slices = [percent_mission, percent_remaning]
+        labels = ["", f"{percent_remaning}%"]
+        colors = [grey, khaki]
+        
+
+        if rmd == '1':
+            days = "dzień"
+        else:
+            days = "dni"
+
+        plt.figure(facecolor = grey)
+        plt.title('Pozostało:', color='white', fontsize=17)
+
+        plt.pie(slices, labels=labels, textprops={'color': 'white', 'fontsize':15}, colors=colors, startangle= 90, counterclock=False, labeldistance=1.2)
+        centre_circle =plt.Circle((0, 0), 0.80, fc=grey)
+        fig = plt.gcf()
+        fig.gca().add_artist(centre_circle)
+        plt.text(0, .1, rmd, ha='center', color='white', fontsize=18)
+        plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
+
 
     def m_type():
         if os.path.isfile('mission_data.db'):
@@ -233,6 +231,12 @@ class SettingScreen(Screen):
         
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
+        
+        MainScreen.pie_chart()
+        chart = self.manager.screens[0].ids.chart
+        chart.clear_widgets()
+        chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        
         if MissionCalculations.whole_days() == -1:
             self.mission_day = "Wybierz datę"
         else:
