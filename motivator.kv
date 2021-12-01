@@ -59,9 +59,9 @@
             color: (97/255,131/255,88/255,1)
         BoxLayout:
             MyButton:
-                text: "Ustawienia"
+                text: "<"
             MyButton:
-                text: "Dalej"
+                text: ">"
                 on_press:
                     root.manager.current = 'settings'
                     root.manager.transition.direction = 'left'
@@ -147,14 +147,16 @@
             size_hint: (1 , 1)
             on_press:
                 root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active, s_y_spinner.text, s_m_spinner.text, s_d_spinner.text, e_y_spinner.text, e_m_spinner.text, e_d_spinner.text)
-            on_release: 
-                app.root.current = "main"
-                
+        
+        MyLabel:
+            color:"red"
+            text: "komunikat"
         BoxLayout:
             MyButton:
-                text: "Ustawienia"
-            MyButton:
-                text: "Wróć"
+                text: "<"
                 on_press:
                     root.manager.current = 'main'
                     root.manager.transition.direction = 'right'
+            MyButton:
+                text: ">"
+

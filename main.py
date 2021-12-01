@@ -258,9 +258,12 @@ class SettingScreen(Screen):
 
 
 class Motivator(App):
-    years_list = [str(x) for x in range(2020, 2026)]
+    year = int(date.today().year)
+    years_list = [str(x) for x in range(year-1, year+3)]
     months_list = ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"]
     days_list = [str(x) for x in range(1, 32)]
+    # TODO: change the list do to month
+    days_list_29 = [str(x) for x in range(1, 30)]
     
     def build(self):
         sm = ScreenManager()
