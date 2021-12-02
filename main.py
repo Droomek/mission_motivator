@@ -1,7 +1,8 @@
-from datetime import date, datetime
+import time
 import os
 import sqlite3
 import kivy
+from datetime import date, datetime
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
@@ -18,6 +19,7 @@ MONTHS_DICT = {
     "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
     "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
 
+# calculations ------------------------------------------------------------------------------------------
 
 class MissionCalculations(ScreenManager):
     
@@ -72,7 +74,7 @@ class MissionCalculations(ScreenManager):
     def m_earning():
         benefit = 0
         doc_benefit = 0
-        range_dict = {"Wybierz stopień etatowy": 0,
+        range_dict = {"wybierz stopień etatowy": 0,
             "szer.": 1.50, "st. szer.":1.55,"kpr.": 1.60,"st. kpr.": 1.65,"plut.": 1.70,
             "sierż.": 1.75,"st. sierż.": 1.80,"mł. chor.": 1.85,"chor.": 1.90,"st. chor.": 1.95,
             "st. chor. sztab.": 2.00,"ppor.": 2.10,"por.": 2.30,"kpt.": 2.70,"mjr": 3.10,
@@ -127,7 +129,7 @@ class MainScreen(Screen):
         self.mission_type = MainScreen.m_type()
         self.today_data = f"{str(date.today())}"
         if MissionCalculations.whole_days() == -1:
-            self.mission_day = "Wybierz datę"
+            self.mission_day = "wybierz datę"
         else:
             self.mission_day = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         self.mission_earning = "{:.2f} zł.".format(MissionCalculations.m_earning())
@@ -157,7 +159,7 @@ class MainScreen(Screen):
             days = "dni"
 
         plt.figure(facecolor = grey)
-        plt.title('Pozostało:', color='white', fontsize=17)
+        plt.title('pozostało:', color='white', fontsize=17)
 
         plt.pie(slices, labels=labels, textprops={'color': 'white', 'fontsize':15}, colors=colors, startangle= 90, counterclock=False, labeldistance=1.2)
         centre_circle =plt.Circle((0, 0), 0.80, fc=grey)
@@ -178,11 +180,12 @@ class MainScreen(Screen):
             conn.commit()
             conn.close()
         else:
-            mission = "Wybierz misję"
+            mission = "wybierz misję"
         return mission
    
 # SettingScreen -----------------------------------------------------------------------------------------
 class SettingScreen(Screen):
+    message_text = StringProperty()
     
     def mission_clicked(self, mission):
         pass
@@ -238,7 +241,7 @@ class SettingScreen(Screen):
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
         
         if MissionCalculations.whole_days() == -1:
-            self.mission_day = "Wybierz datę"
+            self.mission_day = "wybierz datę"
         else:
             self.manager.screens[0].ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         
@@ -247,7 +250,39 @@ class SettingScreen(Screen):
         # print(type(start_date))
         # print (end_date)
         # print(type(end_date))
+    
+    def message(self):
+        messages = []
+        conn = sqlite3.connect('mission_data.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM mission_data")
+        items = c.fetchall()
+        mission = items[0][0]
+        range = items[0][1]
+        s_date = datetime.strptime(items[0][4], '%Y-%m-%d').date()
+        e_date = datetime.strptime(items[0][5], '%Y-%m-%d').date()
+        
+        # TODO: improove messeges
+        if mission == "wybierz misję":
+            messages.append("wybierz misję")
+        if s_date == date(2021, 1, 1):
+            messages.append("ustaw datę rozpoczęcia")
+        if e_date == date(2021, 1, 1):
+            messages.append("ustaw datę zakończenia")
+        if range == "wybierz stopień etatowy":
+            messages.append("wybierz stopień etatowy")
+        if s_date >= e_date:
+            messages.append("podaj prawidłowe daty")
+        
+        if messages:
+            message_text = ""
+            for message in messages:
+                message_text = f"{message_text} {message}\n"
+            self.message_text = f"{message_text}"
+        else:
+            self.message_text = f"zapisano"
 
+        conn.close()
     
     def checkbox_clicked(self, instance, value):
         pass
@@ -256,6 +291,7 @@ class SettingScreen(Screen):
     def range_clicked(self, range):
         pass
 
+# Application  ------------------------------------------------------------------------------------------------
 
 class Motivator(App):
     year = int(date.today().year)

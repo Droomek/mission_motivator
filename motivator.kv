@@ -51,7 +51,7 @@
                 id: chart
                 size_hint: 1, 3
         MyLabel:
-            text: "Zarobiłeś:"
+            text: "zarobiłeś:"
         MyLabel:
             id : earning_label
             text: root.mission_earning
@@ -77,11 +77,11 @@
 
         MySpinner:
             id: mission_spinner
-            text: "Wybierz misję"
+            text: "wybierz misję"
             values: ["PKW EUFOR Althea","PKW EUTM RCA", "PKW Irak", "PKW IRINI", "PKW KFOR", "PKW Łotwa", "PKW Morze Północne", "PKW Orlik", "PKW Rumunia","PKW Turcja", "PKW UNIFIL"]
             on_text: root.mission_clicked(mission_spinner.text)
         MyLabel:
-            text: "Data Rozpoczęcia:"
+            text: "data rozpoczęcia:"
         BoxLayout:
             size: root.width, root.height
             padding: 0
@@ -102,7 +102,7 @@
                 values: app.days_list
                 on_text: root.start_day_clicked(s_d_spinner.text)
         MyLabel:
-            text: "Data Zakończenia:"
+            text: "data zakończenia:"
         BoxLayout:
             size: root.width, root.height
             padding: 0
@@ -124,33 +124,36 @@
                 on_text: root.end_day_clicked(e_d_spinner.text)
         MySpinner:
             id: range_spinner
-            text: "Wybierz stopień etatowy"
-            values: ["Wybierz stopień etatowy", "szer.", "st. szer.", "kpr.", "st. kpr.", "plut.", "sierż.", "st. sierż.", "mł. chor.", "chor.", "st. chor.", "st. chor. sztab.", "ppor.", "por.", "kpt.", "mjr", "ppłk", "płk", "gen. bryg.", "gen. dyw.", "gen. bron."]
+            text: "wybierz stopień etatowy"
+            values: ["wybierz stopień etatowy", "szer.", "st. szer.", "kpr.", "st. kpr.", "plut.", "sierż.", "st. sierż.", "mł. chor.", "chor.", "st. chor.", "st. chor. sztab.", "ppor.", "por.", "kpt.", "mjr", "ppłk", "płk", "gen. bryg.", "gen. dyw.", "gen. bron."]
             on_text: root.range_clicked(range_spinner.text)
         GridLayout:
             cols:2
             MyLabel:
-                text:"Lekarz ze spec."
+                text:"lekarz ze spec."
             CheckBox:
                 group: "doctors"
                 id: check_spec
                 on_active: root.checkbox_clicked(self, self.active)
             MyLabel:
-                text:"Lekarz"
+                text:"lekarz"
             CheckBox:
                 group: "doctors"
                 id: check_doc
                 on_active: root.checkbox_clicked(self, self.active)
         
         MyButton:
-            text: "Zapisz"
+            text: "zapisz"
             size_hint: (1 , 1)
             on_press:
                 root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active, s_y_spinner.text, s_m_spinner.text, s_d_spinner.text, e_y_spinner.text, e_m_spinner.text, e_d_spinner.text)
+            on_release:    
+                root.message()
         
-        MyLabel:
+        Label:
+            id: message_label
             color:"red"
-            text: "komunikat"
+            text: root.message_text
         BoxLayout:
             MyButton:
                 text: "<"
