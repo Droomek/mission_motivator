@@ -88,17 +88,17 @@
             spacing: 0
             DataSpinner:
                 id: s_y_spinner
-                text: "2021"
+                text: "R"
                 values: app.years_list
                 on_text: root.start_year_clicked(s_y_spinner.text)
             DataSpinner:
                 id: s_m_spinner
-                text: "Sty"
+                text: "M"
                 values: app.months_list
                 on_text: root.start_month_clicked(s_m_spinner.text)
             DataSpinner:
                 id: s_d_spinner
-                text: "1"
+                text: "D"
                 values: app.days_list
                 on_text: root.start_day_clicked(s_d_spinner.text)
         MyLabel:
@@ -109,17 +109,17 @@
             spacing: 0
             DataSpinner:
                 id: e_y_spinner
-                text: "2021"
+                text: "R"
                 values: app.years_list
                 on_text: root.end_year_clicked(e_y_spinner.text)
             DataSpinner:
                 id: e_m_spinner
-                text: "Sty"
+                text: "M"
                 values: app.months_list
                 on_text: root.end_month_clicked(e_m_spinner.text)
             DataSpinner:
                 id: e_d_spinner
-                text: "1"
+                text: "D"
                 values: app.days_list
                 on_text: root.end_day_clicked(e_d_spinner.text)
         MySpinner:
@@ -147,8 +147,6 @@
             size_hint: (1 , 1)
             on_press:
                 root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active, s_y_spinner.text, s_m_spinner.text, s_d_spinner.text, e_y_spinner.text, e_m_spinner.text, e_d_spinner.text)
-            on_release:    
-                root.message()
         
         Label:
             id: message_label

@@ -1,4 +1,3 @@
-import time
 import os
 import sqlite3
 import kivy
@@ -209,29 +208,41 @@ class SettingScreen(Screen):
         pass
     
     def safe_clicked(self, mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day):
-        start_date = date(int(s_year), MONTHS_DICT[s_month], int(s_day))
-        end_date = date(int(e_year), MONTHS_DICT[e_month], int(e_day))
-        if not os.path.isfile('mission_data.db'):
-            conn = sqlite3.connect('mission_data.db')
-            c = conn.cursor()
-            c.execute("""CREATE TABLE mission_data (
-                    mission TEXT,
-                    range TEXT,
-                    specialist NUMERIC,
-                    doctor NUMERIC,
-                    start_date TEXT,
-                    end_date TEXT
-                )""")
-            c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?)", (mission, range, spec, doc, start_date, end_date))
-            conn.commit()
-            conn.close()
+        if s_year == "R" or e_year == "R" or s_month == "M" or e_month == "M" or s_day == "D" or e_day == "D":
+            if s_year == "R" or s_month == "M" or s_day == "D":
+                start_date = 0
+            else:
+                start_date = 1
+            if e_year == "R" or e_month == "M" or e_day == "D":
+                end_date = 0
+            else:
+                end_date = 0
         else:
-            conn = sqlite3.connect('mission_data.db')
-            c = conn.cursor()
-            c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?, start_date = ?, end_date = ?", (mission, range, spec, doc, start_date, end_date))
-            conn.commit()
-            conn.close()
+            start_date = date(int(s_year), MONTHS_DICT[s_month], int(s_day))
+            end_date = date(int(e_year), MONTHS_DICT[e_month], int(e_day))
+            if not os.path.isfile('mission_data.db'):
+                conn = sqlite3.connect('mission_data.db')
+                c = conn.cursor()
+                c.execute("""CREATE TABLE mission_data (
+                        mission TEXT,
+                        range TEXT,
+                        specialist NUMERIC,
+                        doctor NUMERIC,
+                        start_date TEXT,
+                        end_date TEXT
+                    )""")
+                c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?)", (mission, range, spec, doc, start_date, end_date))
+                conn.commit()
+                conn.close()
+            else:
+                conn = sqlite3.connect('mission_data.db')
+                c = conn.cursor()
+                c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?, start_date = ?, end_date = ?", (mission, range, spec, doc, start_date, end_date))
+                conn.commit()
+                conn.close()
         
+        self.manager.screens[1].ids.message_label.text  = SettingScreen.message(mission, range, start_date, end_date)
+
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
         
@@ -251,38 +262,28 @@ class SettingScreen(Screen):
         # print (end_date)
         # print(type(end_date))
     
-    def message(self):
+    def message(mission, range, start_date, end_date):
         messages = []
-        conn = sqlite3.connect('mission_data.db')
-        c = conn.cursor()
-        c.execute("SELECT * FROM mission_data")
-        items = c.fetchall()
-        mission = items[0][0]
-        range = items[0][1]
-        s_date = datetime.strptime(items[0][4], '%Y-%m-%d').date()
-        e_date = datetime.strptime(items[0][5], '%Y-%m-%d').date()
         
-        # TODO: improove messeges
         if mission == "wybierz misję":
             messages.append("wybierz misję")
-        if s_date == date(2021, 1, 1):
+        if start_date == 0:
             messages.append("ustaw datę rozpoczęcia")
-        if e_date == date(2021, 1, 1):
+        if end_date == 0:
             messages.append("ustaw datę zakończenia")
         if range == "wybierz stopień etatowy":
             messages.append("wybierz stopień etatowy")
-        if s_date >= e_date:
+        if start_date >= end_date:
             messages.append("podaj prawidłowe daty")
         
         if messages:
             message_text = ""
             for message in messages:
                 message_text = f"{message_text} {message}\n"
-            self.message_text = f"{message_text}"
+            text = f"{message_text}"
         else:
-            self.message_text = f"zapisano"
-
-        conn.close()
+            text = f"zapisano"
+        return text
     
     def checkbox_clicked(self, instance, value):
         pass
