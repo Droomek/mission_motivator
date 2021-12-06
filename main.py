@@ -18,6 +18,13 @@ MONTHS_DICT = {
     "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
     "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
 
+RANGE_DICT = {
+    "szer.": 1.50, "st. szer.":1.55,"kpr.": 1.60,"st. kpr.": 1.65,"plut.": 1.70,
+    "sierż.": 1.75,"st. sierż.": 1.80,"mł. chor.": 1.85,"chor.": 1.90,"st. chor.": 1.95,
+    "st. chor. sztab.": 2.00,"ppor.": 2.10,"por.": 2.30,"kpt.": 2.70,"mjr": 3.10,
+    "ppłk": 3.50,"płk": 3.80,"gen. bryg.": 5.00,"gen. dyw.": 5.50,"gen. bron.": 6.00
+    }
+
 # calculations ------------------------------------------------------------------------------------------
 
 class MissionCalculations(ScreenManager):
@@ -73,12 +80,6 @@ class MissionCalculations(ScreenManager):
     def m_earning():
         benefit = 0
         doc_benefit = 0
-        range_dict = {"wybierz stopień etatowy": 0,
-            "szer.": 1.50, "st. szer.":1.55,"kpr.": 1.60,"st. kpr.": 1.65,"plut.": 1.70,
-            "sierż.": 1.75,"st. sierż.": 1.80,"mł. chor.": 1.85,"chor.": 1.90,"st. chor.": 1.95,
-            "st. chor. sztab.": 2.00,"ppor.": 2.10,"por.": 2.30,"kpt.": 2.70,"mjr": 3.10,
-            "ppłk": 3.50,"płk": 3.80,"gen. bryg.": 5.00,"gen. dyw.": 5.50,"gen. bron.": 6.00
-            }
         if os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
@@ -89,7 +90,7 @@ class MissionCalculations(ScreenManager):
             spec = items[0][2]
             doc = items[0][3]
             
-            multipiler = range_dict[range]
+            multipiler = RANGE_DICT[range]
             
             if mission == "PKW EUTM RCA" or mission == "PKW Irak" or mission == "PKW IRINI":
                 benefit = ((LOWEST_EARNING * 0.70) / 30) * MissionCalculations.mission_day()
@@ -208,7 +209,11 @@ class SettingScreen(Screen):
         pass
     
     def safe_clicked(self, mission, range, spec, doc, s_year, s_month, s_day, e_year, e_month, e_day):
-        if s_year == "R" or e_year == "R" or s_month == "M" or e_month == "M" or s_day == "D" or e_day == "D":
+        if mission == "wybierz misję" or range == "wybierz stopień etatowy" or s_year == "R" or e_year == "R" or s_month == "M" or e_month == "M" or s_day == "D" or e_day == "D":
+            if mission == "wybierz misję":
+                mission = 0
+            if range == "wybierz stopień etatowy":
+                range = 0
             if s_year == "R" or s_month == "M" or s_day == "D":
                 start_date = 0
             else:
@@ -216,7 +221,7 @@ class SettingScreen(Screen):
             if e_year == "R" or e_month == "M" or e_day == "D":
                 end_date = 0
             else:
-                end_date = 0
+                end_date = 1
         else:
             start_date = date(int(s_year), MONTHS_DICT[s_month], int(s_day))
             end_date = date(int(e_year), MONTHS_DICT[e_month], int(e_day))
@@ -265,16 +270,17 @@ class SettingScreen(Screen):
     def message(mission, range, start_date, end_date):
         messages = []
         
-        if mission == "wybierz misję":
+        if mission == 0:
             messages.append("wybierz misję")
         if start_date == 0:
             messages.append("ustaw datę rozpoczęcia")
         if end_date == 0:
             messages.append("ustaw datę zakończenia")
-        if range == "wybierz stopień etatowy":
-            messages.append("wybierz stopień etatowy")
-        if start_date >= end_date:
+        if start_date > end_date:
             messages.append("podaj prawidłowe daty")
+        if range == 0:
+            messages.append("wybierz stopień etatowy")
+
         
         if messages:
             message_text = ""
@@ -295,9 +301,10 @@ class SettingScreen(Screen):
 # Application  ------------------------------------------------------------------------------------------------
 
 class Motivator(App):
+    range_list = list(RANGE_DICT.keys())
     year = int(date.today().year)
     years_list = [str(x) for x in range(year-1, year+3)]
-    months_list = ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"]
+    months_list = list(MONTHS_DICT.keys())
     days_list = [str(x) for x in range(1, 32)]
     # TODO: change the list do to month
     days_list_29 = [str(x) for x in range(1, 30)]
