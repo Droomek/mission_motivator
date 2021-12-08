@@ -138,7 +138,22 @@ class MainScreen(Screen):
             MainScreen.pie_chart()
             chart = self.ids.chart
             chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-    
+
+
+    def m_type():
+        if os.path.isfile('mission_data.db'):
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM mission_data")
+            items = c.fetchall()
+            mission = items[0][0]
+            
+            conn.commit()
+            conn.close()
+        else:
+            mission = "wybierz misję"
+        return mission
+
     def pie_chart():
 
         percent_remaning = int((MissionCalculations.remaning_days() * 100)/MissionCalculations.whole_days())
@@ -169,20 +184,7 @@ class MainScreen(Screen):
         plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
 
 
-    def m_type():
-        if os.path.isfile('mission_data.db'):
-            conn = sqlite3.connect('mission_data.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM mission_data")
-            items = c.fetchall()
-            mission = items[0][0]
-            
-            conn.commit()
-            conn.close()
-        else:
-            mission = "wybierz misję"
-        return mission
-   
+
 # SettingScreen -----------------------------------------------------------------------------------------
 class SettingScreen(Screen):
     message_text = StringProperty()
