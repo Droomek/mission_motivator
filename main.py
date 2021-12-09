@@ -55,7 +55,7 @@ class MissionCalculations(ScreenManager):
     
     def whole_days():
         whole = MissionCalculations.end_date() - MissionCalculations.start_date()
-        all_days = int(whole.days)
+        all_days = int(whole.days) - int(MissionCalculations.get_mission_days_out())
         if all_days > 0:
             return all_days
         else:
@@ -71,7 +71,7 @@ class MissionCalculations(ScreenManager):
     
     def mission_day():
         mis_day = date.today() - MissionCalculations.start_date()
-        m_days = int(mis_day.days)
+        m_days = int(mis_day.days) - int(MissionCalculations.get_mission_days_out())
         if m_days > 0:
             return  m_days
         else:
@@ -169,14 +169,18 @@ class MainScreen(Screen):
         self.ids.out_mission_label.text = out_days
         if os.path.isfile('mission_data.db'):
             MainScreen.save_out_days(out_days)
-        
-        print(MissionCalculations.get_mission_days_out())
-
+    
+        self.ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
+        MainScreen.pie_chart()
+        chart = self.manager.screens[0].ids.chart
+        chart.clear_widgets()
+        chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        self.ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
 
     def save_out_days(days):
         conn = sqlite3.connect('mission_data.db')
         c = conn.cursor()
-        c.execute("UPDATE mission_data SET out_mission = ?", (days))
+        c.execute("UPDATE mission_data SET out_mission = ?", (days, ))
         conn.commit()
         conn.close()
 
