@@ -62,16 +62,15 @@
                 MyButton:
                     font_size: 30
                     text: "-"
-                    on_release: out_mission_label.text = str(int(out_mission_label.text) -1)
+                    on_press: root.mission_out_days(self.text, out_mission_label.text)
                 MyLabel:
                     id: out_mission_label
                     size_hint: 1, 1
-                    text: "0"
+                    text: root.out_mission_days
                 MyButton:
                     font_size: 30
-                    text: "+"
-                    on_release: out_mission_label.text = str(int(out_mission_label.text) +1)
-                        
+                    text: "+"                   
+                    on_press: root.mission_out_days(self.text, out_mission_label.text)                    
         BoxLayout:
             orientation: "vertical"
             MyLabel:
@@ -150,7 +149,6 @@
             id: range_spinner
             text: "wybierz stopień etatowy"
             values: app.range_list
-            # values: ["wybierz stopień etatowy", "szer.", "st. szer.", "kpr.", "st. kpr.", "plut.", "sierż.", "st. sierż.", "mł. chor.", "chor.", "st. chor.", "st. chor. sztab.", "ppor.", "por.", "kpt.", "mjr", "ppłk", "płk", "gen. bryg.", "gen. dyw.", "gen. bron."]
             on_text: root.range_clicked(range_spinner.text)
         GridLayout:
             cols:2

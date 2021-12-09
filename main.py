@@ -76,6 +76,18 @@ class MissionCalculations(ScreenManager):
             return  m_days
         else:
             return -1
+    
+    def get_mission_days_out():
+        if os.path.isfile('mission_data.db'):
+            conn = sqlite3.connect('mission_data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM mission_data")
+            items = c.fetchall()
+            days = items[0][6]
+            conn.close()
+        else:
+            days = "0"
+        return days
 
     def m_earning():
         benefit = 0
@@ -122,6 +134,7 @@ class MainScreen(Screen):
     today_data = StringProperty()
     mission_day = StringProperty()
     mission_earning = StringProperty()
+    out_mission_days = StringProperty()
     
 
     def __init__(self, **kwargs):
@@ -138,6 +151,34 @@ class MainScreen(Screen):
             MainScreen.pie_chart()
             chart = self.ids.chart
             chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        
+        self.out_mission_days = MissionCalculations.get_mission_days_out()
+    
+    def mission_out_days(self, sign, days):
+        if sign == "-":
+            if int(days) > 0:
+                out_days =  str(int(days) -1)
+            else:
+                out_days = "0"
+        else:
+            if int(days) < MissionCalculations.whole_days():
+                out_days =  str(int(days) +1)
+            else:
+                out_days = str(MissionCalculations.whole_days())
+        
+        self.ids.out_mission_label.text = out_days
+        if os.path.isfile('mission_data.db'):
+            MainScreen.save_out_days(out_days)
+        
+        print(MissionCalculations.get_mission_days_out())
+
+
+    def save_out_days(days):
+        conn = sqlite3.connect('mission_data.db')
+        c = conn.cursor()
+        c.execute("UPDATE mission_data SET out_mission = ?", (days))
+        conn.commit()
+        conn.close()
 
 
     def m_type():
@@ -236,9 +277,10 @@ class SettingScreen(Screen):
                         specialist NUMERIC,
                         doctor NUMERIC,
                         start_date TEXT,
-                        end_date TEXT
+                        end_date TEXT,
+                        out_mission TEXT
                     )""")
-                c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?)", (mission, range, spec, doc, start_date, end_date))
+                c.execute("INSERT INTO mission_data VALUES (?, ?, ?, ?, ?, ?,?)", (mission, range, spec, doc, start_date, end_date, "0"))
                 conn.commit()
                 conn.close()
             else:
