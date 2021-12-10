@@ -101,7 +101,7 @@
         MySpinner:
             id: mission_spinner
             text: "wybierz misję"
-            values: ["PKW EUFOR Althea","PKW EUTM RCA", "PKW Irak", "PKW IRINI", "PKW KFOR", "PKW Łotwa", "PKW Morze Północne", "PKW Orlik", "PKW Rumunia","PKW Turcja", "PKW UNIFIL"]
+            values: app.contingent_list
             on_text: root.mission_clicked(mission_spinner.text)
         MyLabel:
             text: "data rozpoczęcia:"

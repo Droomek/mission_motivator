@@ -14,9 +14,17 @@ kivy.require ('1.4.0')
 Window.size = (360, 640)
 
 LOWEST_EARNING = 4110
+
+CONTINGENT_DICT = {
+    "PKW EUFOR Althea": 0,"PKW EUTM RCA": 0.70, "PKW Irak": 0.70, 
+    "PKW IRINI": 0.70, "PKW KFOR": 0, "PKW Łotwa": 0, "PKW Morze Północne": 0, 
+    "PKW Orlik": 0, "PKW Rumunia": 0,"PKW Turcja": 0, "PKW UNIFIL": 0
+    }
+
 MONTHS_DICT = {
     "Sty": 1, "Lut": 2, "Mar": 3, "Kwi": 4, "Maj": 5, "Cze": 6, 
-    "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12}
+    "Lip": 7, "Sie": 8, "Wrz": 9, "Paź": 10, "Lis": 11, "Gru": 12
+    }
 
 RANGE_DICT = {
     "szer.": 1.50, "st. szer.":1.55,"kpr.": 1.60,"st. kpr.": 1.65,"plut.": 1.70,
@@ -90,7 +98,7 @@ class MissionCalculations(ScreenManager):
         return days
 
     def m_earning():
-        benefit = 0
+        # benefit = 0
         doc_benefit = 0
         if os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
@@ -103,12 +111,7 @@ class MissionCalculations(ScreenManager):
             doc = items[0][3]
             
             multipiler = RANGE_DICT[range]
-            
-            if mission == "PKW EUTM RCA" or mission == "PKW Irak" or mission == "PKW IRINI":
-                benefit = ((LOWEST_EARNING * 0.70) / 30) * MissionCalculations.mission_day()
-            else:
-                benefit = 0
-            
+          
             if spec == 1:
                 doc_benefit = ((LOWEST_EARNING * 2.5) / 30) * MissionCalculations.mission_day()
             elif doc == 1: 
@@ -116,7 +119,9 @@ class MissionCalculations(ScreenManager):
             else:
                 doc_benefit = 0
 
-            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + benefit + doc_benefit
+            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit
+
+            print (CONTINGENT_DICT[mission])
 
             conn.commit()
             conn.close()
@@ -349,6 +354,7 @@ class SettingScreen(Screen):
 # Application  ------------------------------------------------------------------------------------------------
 
 class Motivator(App):
+    contingent_list = list(CONTINGENT_DICT.keys())
     range_list = list(RANGE_DICT.keys())
     year = int(date.today().year)
     years_list = [str(x) for x in range(year-1, year+3)]
