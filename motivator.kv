@@ -81,13 +81,54 @@
                 font_size: 32
                 color: (97/255,131/255,88/255,1)
         BoxLayout:
-            MyButton:
-                text: "<"
-            MyButton:
-                text: ">"
+            padding: 0
+            spacing: 0
+            Button:
+                background_color: 0,0,0,0
                 on_press:
+                    root.home_button_on()
+                on_release:
+                    root.home_button_off()
+                Image:
+                    id: home_image
+                    source:"img/home_green.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                background_color: 0,0,0,0
+                on_press:
+                    root.details_button_on()
+                on_release:
+                    root.details_button_off()
+                Image:
+                    id: details_image
+                    source:"img/details_white.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                background_color: 0,0,0,0
+                on_press:
+                    root.settings_button_on()
+                on_release:
+                    root.settings_button_off()
                     root.manager.current = 'settings'
                     root.manager.transition.direction = 'left'
+                Image:
+                    id: settings_image
+                    source:"img/settings_white.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                background_color: 0,0,0,0
+                on_press:
+                    root.info_button_on()
+                on_release:
+                    root.info_button_off()
+                Image:
+                    id: info_image
+                    source:"img/info_white.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
 
 
 <SettingScreen>
@@ -176,11 +217,52 @@
             color:"red"
             text: root.message_text
         BoxLayout:
-            MyButton:
-                text: "<"
+            padding: 0
+            spacing: 0
+            Button:
+                background_color: 0,0,0,0
                 on_press:
+                    root.home_button_on()
+                on_release:
+                    root.home_button_off()
                     root.manager.current = 'main'
                     root.manager.transition.direction = 'right'
-            MyButton:
-                text: ">"
+                Image:
+                    id: home_image
+                    source:"img/home_white.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                background_color: 0,0,0,0
+                on_press:
+                    root.details_button_on()
+                on_release:
+                    root.details_button_off()
+                Image:
+                    id: details_image
+                    source:"img/details_white.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                background_color: 0,0,0,0
+                on_press:
+                    root.settings_button_on()
+                on_release:
+                    root.settings_button_off()
+                Image:
+                    id: settings_image
+                    source:"img/settings_green.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                background_color: 0,0,0,0
+                on_press:
+                    root.info_button_on()
+                on_release:
+                    root.info_button_off()
+                Image:
+                    id: info_image
+                    source:"img/info_white.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
 

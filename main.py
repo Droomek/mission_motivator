@@ -233,6 +233,29 @@ class MainScreen(Screen):
         plt.text(0, .1, rmd, ha='center', color='white', fontsize=18)
         plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
 
+    def home_button_on(self):
+        self.ids.home_image.source = "img/home_white.png"
+
+    def home_button_off(self):
+        self.ids.home_image.source = "img/home_green.png"
+    
+    def details_button_on(self):
+        self.ids.details_image.source = "img/details_green.png"
+    
+    def details_button_off(self):
+        self.ids.details_image.source = "img/details_white.png"
+    
+    def settings_button_on(self):
+        self.ids.settings_image.source = "img/settings_green.png"
+    
+    def settings_button_off(self):
+        self.ids.settings_image.source = "img/settings_white.png"
+    
+    def info_button_on(self):
+        self.ids.info_image.source = "img/info_green.png"
+    
+    def info_button_off(self):
+        self.ids.info_image.source = "img/info_white.png"
 
 
 # SettingScreen -----------------------------------------------------------------------------------------
@@ -350,6 +373,30 @@ class SettingScreen(Screen):
 
     def range_clicked(self, range):
         pass
+
+    def home_button_on(self):
+        self.ids.home_image.source = "img/home_green.png"
+    
+    def home_button_off(self):
+        self.ids.home_image.source = "img/home_white.png"
+    
+    def details_button_on(self):
+        self.ids.details_image.source = "img/details_green.png"
+    
+    def details_button_off(self):
+        self.ids.details_image.source = "img/details_white.png"
+    
+    def settings_button_on(self):
+        self.ids.settings_image.source = "img/settings_white.png"
+    
+    def settings_button_off(self):
+        self.ids.settings_image.source = "img/settings_green.png"
+    
+    def info_button_on(self):
+        self.ids.info_image.source = "img/info_green.png"
+    
+    def info_button_off(self):
+        self.ids.info_image.source = "img/info_white.png"
 
 # Application  ------------------------------------------------------------------------------------------------
 
