@@ -312,8 +312,12 @@ class SettingScreen(Screen):
                 c.execute("UPDATE mission_data SET mission = ?, range = ?, specialist = ?, doctor = ?, start_date = ?, end_date = ?", (mission, range, spec, doc, start_date, end_date))
                 conn.commit()
                 conn.close()
-        
+            
+            self.manager.current = 'main'
+            self.manager.transition.direction = 'right'
+
         self.manager.screens[1].ids.message_label.text  = SettingScreen.message(mission, range, start_date, end_date)
+        
 
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
