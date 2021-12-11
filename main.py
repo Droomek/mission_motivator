@@ -3,7 +3,11 @@ import sqlite3
 import kivy
 from datetime import date, datetime
 from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 from kivy.properties import StringProperty
 from kivy.lang import Builder
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
@@ -33,7 +37,7 @@ RANGE_DICT = {
     "ppłk": 3.50,"płk": 3.80,"gen. bryg.": 5.00,"gen. dyw.": 5.50,"gen. bron.": 6.00
     }
 
-# calculations ------------------------------------------------------------------------------------------
+# calculations ------------------------------------------------------------------------------------------------------
 
 class MissionCalculations(ScreenManager):
     
@@ -118,7 +122,8 @@ class MissionCalculations(ScreenManager):
             else:
                 doc_benefit = 0
 
-            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit
+            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) 
+            + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit
 
             conn.commit()
             conn.close()
@@ -127,10 +132,10 @@ class MissionCalculations(ScreenManager):
 
         return earning
 
-# kivy bulider ------------------------------------------------------------------------------------------
+# kivy bulider ------------------------------------------------------------------------------------------------------
 Builder.load_file('motivator.kv')
 
-# Main screen -------------------------------------------------------------------------------------------
+# Main screen ------------------------------------------------------------------------------------------------------
 class MainScreen(Screen):
     mission_type = StringProperty()
     today_data = StringProperty()
@@ -249,7 +254,7 @@ class MainScreen(Screen):
         self.ids.info_image.source = "img/info_white.png"
 
 
-# SettingScreen -----------------------------------------------------------------------------------------
+# SettingScreen ------------------------------------------------------------------------------------------------------
 class SettingScreen(Screen):
     message_text = StringProperty()
     
@@ -288,6 +293,19 @@ class SettingScreen(Screen):
                 end_date = 0
             else:
                 end_date = 1
+        
+            layout = GridLayout(cols = 1, padding =10)
+            popupLabel = Label(font_size = 20, text = SettingScreen.message(mission, range, start_date, end_date))
+            closeButton = Button(text = "OK", font_size = 20, size_hint =(None, None), size =(250, 70), background_color = (97/255,131/255,88/255,1))
+            layout.add_widget(popupLabel)
+            layout.add_widget(closeButton)
+            popup = Popup(title = "Uwaga !!!", title_size = 20,
+                        content =layout, separator_color = (97/255,131/255,88/255,1),
+                        size_hint =(None, None), size =(300, 300)
+                        )
+            popup.open()
+            closeButton.bind(on_press = popup.dismiss)
+
         else:
             start_date = date(int(s_year), MONTHS_DICT[s_month], int(s_day))
             end_date = date(int(e_year), MONTHS_DICT[e_month], int(e_day))
@@ -316,9 +334,6 @@ class SettingScreen(Screen):
             self.manager.current = 'main'
             self.manager.transition.direction = 'right'
 
-        self.manager.screens[1].ids.message_label.text  = SettingScreen.message(mission, range, start_date, end_date)
-        
-
         self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
         self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
         
@@ -337,15 +352,15 @@ class SettingScreen(Screen):
         messages = []
         
         if mission == 0:
-            messages.append("wybierz misję")
+            messages.append("- wybierz misję")
         if start_date == 0:
-            messages.append("ustaw datę rozpoczęcia")
+            messages.append("- ustaw datę rozpoczęcia")
         if end_date == 0:
-            messages.append("ustaw datę zakończenia")
+            messages.append("- ustaw datę zakończenia")
         if start_date > end_date:
-            messages.append("podaj prawidłowe daty")
+            messages.append("- wybierz prawidłowe daty")
         if range == 0:
-            messages.append("wybierz stopień etatowy")
+            messages.append("- wybierz stopień etatowy")
 
         
         if messages:
@@ -401,7 +416,7 @@ class InfoScreen(Screen):
     def info_button_off(self):
         self.ids.info_image.source = "img/info_green.png"
 
-# Application  ------------------------------------------------------------------------------------------------
+# Application  ------------------------------------------------------------------------------------------------------
 
 class Motivator(App):
     contingent_list = list(CONTINGENT_DICT.keys())
