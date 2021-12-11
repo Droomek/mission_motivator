@@ -98,7 +98,6 @@ class MissionCalculations(ScreenManager):
         return days
 
     def m_earning():
-        # benefit = 0
         doc_benefit = 0
         if os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
@@ -120,8 +119,6 @@ class MissionCalculations(ScreenManager):
                 doc_benefit = 0
 
             earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit
-
-            print (CONTINGENT_DICT[mission])
 
             conn.commit()
             conn.close()
@@ -239,12 +236,6 @@ class MainScreen(Screen):
     def home_button_off(self):
         self.ids.home_image.source = "img/home_green.png"
     
-    def details_button_on(self):
-        self.ids.details_image.source = "img/details_green.png"
-    
-    def details_button_off(self):
-        self.ids.details_image.source = "img/details_white.png"
-    
     def settings_button_on(self):
         self.ids.settings_image.source = "img/settings_green.png"
     
@@ -337,11 +328,6 @@ class SettingScreen(Screen):
         else:
             self.manager.screens[0].ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         
-        # TODO delete before production" 
-        # print (start_date)
-        # print(type(start_date))
-        # print (end_date)
-        # print(type(end_date))
     
     def message(mission, range, start_date, end_date):
         messages = []
@@ -380,12 +366,6 @@ class SettingScreen(Screen):
     def home_button_off(self):
         self.ids.home_image.source = "img/home_white.png"
     
-    def details_button_on(self):
-        self.ids.details_image.source = "img/details_green.png"
-    
-    def details_button_off(self):
-        self.ids.details_image.source = "img/details_white.png"
-    
     def settings_button_on(self):
         self.ids.settings_image.source = "img/settings_white.png"
     
@@ -397,6 +377,25 @@ class SettingScreen(Screen):
     
     def info_button_off(self):
         self.ids.info_image.source = "img/info_white.png"
+
+class InfoScreen(Screen):
+    def home_button_on(self):
+        self.ids.home_image.source = "img/home_green.png"
+    
+    def home_button_off(self):
+        self.ids.home_image.source = "img/home_white.png"
+    
+    def settings_button_on(self):
+        self.ids.settings_image.source = "img/settings_green.png"
+    
+    def settings_button_off(self):
+        self.ids.settings_image.source = "img/settings_white.png"
+    
+    def info_button_on(self):
+        self.ids.info_image.source = "img/info_white.png"
+    
+    def info_button_off(self):
+        self.ids.info_image.source = "img/info_green.png"
 
 # Application  ------------------------------------------------------------------------------------------------
 
@@ -414,6 +413,7 @@ class Motivator(App):
         sm = ScreenManager()
         sm.add_widget(MainScreen(name='main'))
         sm.add_widget(SettingScreen(name='settings'))
+        sm.add_widget(InfoScreen(name='info'))
         return sm
 
 if __name__ == '__main__':
