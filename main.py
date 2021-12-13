@@ -39,6 +39,12 @@ RANGE_DICT = {
 
 NUM_DICT = {"01": "1", "02": "2", "03": "3", "04": "4", "05": "5", "06": "6", "07": "7", "08": "8", "09": "9"}
 
+if not os.path.isfile('mission_data.db'):
+    main = 1
+else:
+    main = 0
+
+
 # calculations ------------------------------------------------------------------------------------------------------
 
 class MissionCalculations(ScreenManager):
@@ -179,7 +185,7 @@ class MainScreen(Screen):
     
         self.ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         MainScreen.pie_chart()
-        chart = self.manager.screens[0].ids.chart
+        chart = self.manager.screens[main].ids.chart
         chart.clear_widgets()
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
         self.ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
@@ -317,7 +323,6 @@ class SettingScreen(Screen):
         items = c.fetchall()
         mil_range = items[0][1]
         conn.close()
-        print(mil_range)
         return mil_range
 
     
@@ -397,18 +402,18 @@ class SettingScreen(Screen):
             self.manager.current = 'main'
             self.manager.transition.direction = 'right'
 
-        self.manager.screens[0].ids.mission_label.text = "{}".format(MainScreen.m_type())
-        self.manager.screens[0].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
+        self.manager.screens[main].ids.mission_label.text = "{}".format(MainScreen.m_type())
+        self.manager.screens[main].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
         
         MainScreen.pie_chart()
-        chart = self.manager.screens[0].ids.chart
+        chart = self.manager.screens[main].ids.chart
         chart.clear_widgets()
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
         
         if MissionCalculations.whole_days() == -1:
             self.mission_day = "wybierz datę"
         else:
-            self.manager.screens[0].ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
+            self.manager.screens[main].ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
         
     
     def message(mission, range, start_date, end_date):
@@ -493,9 +498,14 @@ class Motivator(App):
     
     def build(self):
         sm = ScreenManager()
-        sm.add_widget(MainScreen(name='main'))
-        sm.add_widget(SettingScreen(name='settings'))
-        sm.add_widget(InfoScreen(name='info'))
+        if not os.path.isfile('mission_data.db'):
+            sm.add_widget(SettingScreen(name='settings'))
+            sm.add_widget(MainScreen(name='main'))
+            sm.add_widget(InfoScreen(name='info'))
+        else:
+            sm.add_widget(MainScreen(name='main'))
+            sm.add_widget(SettingScreen(name='settings'))
+            sm.add_widget(InfoScreen(name='info'))
         return sm
 
 if __name__ == '__main__':
