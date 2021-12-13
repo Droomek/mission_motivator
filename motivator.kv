@@ -10,6 +10,17 @@
             size: self.size
             pos: self.pos
 
+<MyCheckBox@CheckBox>
+    background_color: (.06, .06, .06, 1)
+    size_hint: .33, 1
+    color: (97/255,131/255,88/255,100)
+    canvas.before:
+        Color:
+            rgba: self.background_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
 <MyButton@Button>
     font_size: "30sp"
     color: (230/255,230/255,230/255,1)
@@ -188,16 +199,18 @@
             values: app.range_list
             on_text: root.range_clicked(range_spinner.text)
         GridLayout:
-            cols:2
+            cols: 2
             MyLabel:
+                size_hint: .66, 1
                 text:"lekarz ze spec."
-            CheckBox:
+            MyCheckBox:
                 group: "doctors"
                 id: check_spec
                 on_active: root.checkbox_clicked(self, self.active)
             MyLabel:
+                size_hint: .66, 1
                 text:"lekarz"
-            CheckBox:
+            MyCheckBox:
                 group: "doctors"
                 id: check_doc
                 on_active: root.checkbox_clicked(self, self.active)
