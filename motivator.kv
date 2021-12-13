@@ -1,5 +1,5 @@
 <MyLabel@Label>
-    font_size: 24
+    font_size: "24sp"
     background_color: (.06, .06, .06, 1)
     size_hint: 1, .5
     color: (230/255,230/255,230/255,1)
@@ -11,18 +11,18 @@
             pos: self.pos
 
 <MyButton@Button>
-    font_size: 30
+    font_size: "30sp"
     color: (230/255,230/255,230/255,1)
     background_color: (97/255,131/255,88/255,1)
 
 <MySpinner@Spinner>
     background_color: (.20, .20, .20, 1)
-    font_size: 24
+    font_size: "24sp"
     size_hint: 1, 1
 
 <DataSpinner@Spinner>
     background_color: (.20, .20, .20, 1)
-    font_size: 24
+    font_size: "24sp"
     size_hint: .33, 1
 
 <MainScreen>
@@ -36,7 +36,7 @@
         MyLabel:
             id: mission_label
             text: root.mission_type
-            font_size: 32
+            font_size: "32sp"
         MyLabel:
             text: root.today_data
         MyLabel:
@@ -59,7 +59,7 @@
                 text: "dni poza obszarem misji:"
             BoxLayout:
                 MyButton:
-                    font_size: 30
+                    font_size: "30sp"
                     text: "-"
                     on_press: root.mission_out_days(self.text, out_mission_label.text)
                 MyLabel:
@@ -67,7 +67,7 @@
                     size_hint: 1, 1
                     text: root.out_mission_days
                 MyButton:
-                    font_size: 30
+                    font_size: "30sp"
                     text: "+"                   
                     on_press: root.mission_out_days(self.text, out_mission_label.text)                    
         BoxLayout:
@@ -77,7 +77,7 @@
             MyLabel:
                 id : earning_label
                 text: root.mission_earning
-                font_size: 32
+                font_size: "32sp"
                 color: (97/255,131/255,88/255,1)
         BoxLayout:
             padding: 0
@@ -204,7 +204,7 @@
         
         MyButton:
             text: "zapisz"
-            font_size: 24
+            font_size: "24sp"
             on_press:
                 root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active, s_y_spinner.text, s_m_spinner.text, s_d_spinner.text, e_y_spinner.text, e_m_spinner.text, e_d_spinner.text)
 
@@ -258,7 +258,7 @@
         spacing: 10
         MyLabel:
             halign: "center"
-            font_size: 36
+            font_size: "36sp"
             color: (97/255,131/255,88/255,1)
             size_hint: 1, 1.2
             text: "Motywator Misyjny"
@@ -267,32 +267,32 @@
             text: "wersja: 0.1"
         MyLabel:
             halign: "center"
-            font_size: 20
+            font_size: "20sp"
             size_hint: 1, 1.4
             text: "Developer:\nRafał Opalanko\nrafalopalanko@gmail.com"
         MyLabel:
             halign: "center"
-            font_size: 16
+            font_size: "16sp"
             size_hint: 1, 1
             text: "Niniejszy program rozpowszechniany jest\nbez jakiejkolwiek gwarancji."
         MyLabel:
             halign: "center"
-            font_size: 20
+            font_size: "20sp"
             size_hint: 1, .4
             text: "kalkulacja zarobków na podstawie:"
         MyLabel:
             halign: "center"
-            font_size: 14
+            font_size: "14sp"
             size_hint: 1, 1.3
             text: "ROZPORZĄDZENIE\nMINISTRA OBRONY NARODOWEJ\nz dnia 5 marca 2010 r.\n(Dz.U.2015.1578)"
         MyLabel:
             halign: "center"
-            font_size: 14
+            font_size: "14sp"
             size_hint: 1, 1.3
             text: "ROZPORZĄDZENIE\nMINISTRA OBRONY NARODOWEJ\nz dnia 31 marca 2020 r.\n(Dz.U.2020.572)"
         MyLabel:
             halign: "center"
-            font_size: 14
+            font_size: "14sp"
             size_hint: 1, 1.3
             text: "DECYZJA Nr 56/MON\nMINISTRA OBRONY NARODOWEJ\nz dnia 20 kwietnia 2020 r.\n(Dz.Urz.MON.2020.71)"
         BoxLayout:

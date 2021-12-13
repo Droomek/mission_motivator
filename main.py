@@ -363,8 +363,8 @@ class SettingScreen(Screen):
                 end_date = 1
         
             layout = GridLayout(cols = 1, padding =10)
-            popupLabel = Label(font_size = 20, text = SettingScreen.message(mission, range, start_date, end_date))
-            closeButton = Button(text = "OK", font_size = 20, size_hint =(None, None), size =(250, 70), background_color = (97/255,131/255,88/255,1))
+            popupLabel = Label(font_size = "20sp", text = SettingScreen.message(mission, range, start_date, end_date))
+            closeButton = Button(text = "OK", font_size = "20sp", size_hint =(None, None), size =(250, 70), background_color = (97/255,131/255,88/255,1))
             layout.add_widget(popupLabel)
             layout.add_widget(closeButton)
             popup = Popup(title = "Uwaga !!!", title_size = 20,
