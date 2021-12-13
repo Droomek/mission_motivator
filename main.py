@@ -37,6 +37,8 @@ RANGE_DICT = {
     "ppłk": 3.50,"płk": 3.80,"gen. bryg.": 5.00,"gen. dyw.": 5.50,"gen. bron.": 6.00
     }
 
+NUM_DICT = {"01": "1", "02": "2", "03": "3", "04": "4", "05": "5", "06": "6", "07": "7", "08": "8", "09": "9"}
+
 # calculations ------------------------------------------------------------------------------------------------------
 
 class MissionCalculations(ScreenManager):
@@ -122,10 +124,8 @@ class MissionCalculations(ScreenManager):
             else:
                 doc_benefit = 0
 
-            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) 
-            + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit
+            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit
 
-            conn.commit()
             conn.close()
         else:
             earning = 0
@@ -199,8 +199,6 @@ class MainScreen(Screen):
             c.execute("SELECT * FROM mission_data")
             items = c.fetchall()
             mission = items[0][0]
-            
-            conn.commit()
             conn.close()
         else:
             mission = "wybierz misję"
@@ -256,7 +254,72 @@ class MainScreen(Screen):
 
 # SettingScreen ------------------------------------------------------------------------------------------------------
 class SettingScreen(Screen):
-    message_text = StringProperty()
+    mission_text = StringProperty()
+    start_year_text = StringProperty()
+    start_month_text = StringProperty()
+    start_day_text = StringProperty()
+    end_year_text = StringProperty()
+    end_month_text = StringProperty()
+    end_day_text = StringProperty()
+    mil_range_text = StringProperty()
+    
+    def __init__(self, **kwargs):
+        super(SettingScreen, self).__init__(**kwargs)
+        if os.path.isfile('mission_data.db'):
+            self.mission_text = MainScreen.m_type()
+            self.start_year_text = SettingScreen.year(MissionCalculations.start_date())
+            self.start_month_text = SettingScreen.month(MissionCalculations.start_date())
+            self.start_day_text =  SettingScreen.day(MissionCalculations.start_date())
+            self.end_year_text = SettingScreen.year(MissionCalculations.end_date())
+            self.end_month_text = SettingScreen.month(MissionCalculations.end_date())
+            self.end_day_text =  SettingScreen.day(MissionCalculations.end_date())
+            self.mil_range_text = SettingScreen.mil_range()
+        else:
+            self.mission_text ="wybierz misję"
+            self.start_year_text ="R"
+            self.start_month_text ="M"
+            self.start_day_text ="D"
+            self.end_year_text ="R"
+            self.end_month_text ="M"
+            self.end_day_text ="D"
+            self.mil_range_text = "wybierz stopień etatowy"
+    
+    def year(date):
+        year_date = (str(date).split(","))
+        return f"{year_date[0][0]}{year_date[0][1]}{year_date[0][2]}{year_date[0][3]}"
+    
+    def month(date):
+        month_date = (str(date).split(","))
+        num = f"{month_date[0][5]}{month_date[0][6]}"
+        if num == "01" or num == "02" or num == "03" or num == "04" or num == "05" or num == "06" or num == "07" or num == "08" or num == "09":
+            month_num = NUM_DICT[num]
+        else:
+            month_num = num
+        
+        for key, value in MONTHS_DICT.items():
+            if int(month_num) == value:
+                month_text = key
+        return month_text
+
+    def day(date):
+        day_date = (str(date).split(","))
+        num = f"{day_date[0][8]}{day_date[0][9]}"
+        if num == "01" or num == "02" or num == "03" or num == "04" or num == "05" or num == "06" or num == "07" or num == "08" or num == "09":
+            day_num = NUM_DICT[num]
+        else:
+            day_num = num
+        return day_num
+    
+    def mil_range():
+        conn = sqlite3.connect('mission_data.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM mission_data")
+        items = c.fetchall()
+        mil_range = items[0][1]
+        conn.close()
+        print(mil_range)
+        return mil_range
+
     
     def mission_clicked(self, mission):
         pass

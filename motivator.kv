@@ -131,7 +131,7 @@
 
         MySpinner:
             id: mission_spinner
-            text: "wybierz misję"
+            text: root.mission_text
             values: app.contingent_list
             on_text: root.mission_clicked(mission_spinner.text)
         BoxLayout:
@@ -145,17 +145,17 @@
                 spacing: 0
                 DataSpinner:
                     id: s_y_spinner
-                    text: "R"
+                    text: root.start_year_text
                     values: app.years_list
                     on_text: root.start_year_clicked(s_y_spinner.text)
                 DataSpinner:
                     id: s_m_spinner
-                    text: "M"
+                    text: root.start_month_text
                     values: app.months_list
                     on_text: root.start_month_clicked(s_m_spinner.text)
                 DataSpinner:
                     id: s_d_spinner
-                    text: "D"
+                    text: root.start_day_text
                     values: app.days_list
                     on_text: root.start_day_clicked(s_d_spinner.text)
         BoxLayout:
@@ -169,22 +169,22 @@
                 spacing: 0
                 DataSpinner:
                     id: e_y_spinner
-                    text: "R"
+                    text: root.end_year_text
                     values: app.years_list
                     on_text: root.end_year_clicked(e_y_spinner.text)
                 DataSpinner:
                     id: e_m_spinner
-                    text: "M"
+                    text: root.end_month_text
                     values: app.months_list
                     on_text: root.end_month_clicked(e_m_spinner.text)
                 DataSpinner:
                     id: e_d_spinner
-                    text: "D"
+                    text: root.end_day_text
                     values: app.days_list
                     on_text: root.end_day_clicked(e_d_spinner.text)
         MySpinner:
             id: range_spinner
-            text: "wybierz stopień etatowy"
+            text: root.mil_range_text
             values: app.range_list
             on_text: root.range_clicked(range_spinner.text)
         GridLayout:
