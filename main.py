@@ -49,29 +49,32 @@ else:
 
 class MissionCalculations(ScreenManager):
     
-    def start_date():
+    def database_exe(command):
         if os.path.isfile('mission_data.db'):
             conn = sqlite3.connect('mission_data.db')
             c = conn.cursor()
-            c.execute("SELECT * FROM mission_data")
+            c.execute(command)
             items = c.fetchall()
-            s_date = datetime.strptime(items[0][4], '%Y-%m-%d').date()
             conn.close()
-        else:
-             s_date = date.today()
-        return s_date
+            return items
+
+    
+    def start_date():
+            items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
+            if items:
+                the_date = datetime.strptime(items[0][4], '%Y-%m-%d').date()
+            else: 
+                the_date = date.today()
+            return the_date
     
     def end_date():
-        if os.path.isfile('mission_data.db'):
-            conn = sqlite3.connect('mission_data.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM mission_data")
-            items = c.fetchall()
-            e_date = datetime.strptime(items[0][5], '%Y-%m-%d').date()
-            conn.close()
-        else:
-             e_date = date.today()
-        return e_date
+            items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
+            if items:
+                the_date = datetime.strptime(items[0][5], '%Y-%m-%d').date()
+            else: 
+                the_date = date.today()
+            return the_date
+  
     
     def whole_days():
         whole = MissionCalculations.end_date() - MissionCalculations.start_date()
@@ -199,16 +202,13 @@ class MainScreen(Screen):
 
 
     def m_type():
-        if os.path.isfile('mission_data.db'):
-            conn = sqlite3.connect('mission_data.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM mission_data")
-            items = c.fetchall()
-            mission = items[0][0]
-            conn.close()
-        else:
-            mission = "wybierz misję"
-        return mission
+            items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
+            if items:
+                mission = items[0][0]
+            else: 
+                mission = "wybierz misję"
+            return mission
+        
 
     def pie_chart():
 
@@ -317,14 +317,8 @@ class SettingScreen(Screen):
         return day_num
     
     def mil_range():
-        conn = sqlite3.connect('mission_data.db')
-        c = conn.cursor()
-        c.execute("SELECT * FROM mission_data")
-        items = c.fetchall()
-        mil_range = items[0][1]
-        conn.close()
-        return mil_range
-
+            items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
+            return items[0][1]
     
     def mission_clicked(self, mission):
         pass
