@@ -317,9 +317,9 @@ class SettingScreen(Screen):
         return day_num
     
     def mil_range():
-            items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
-            return items[0][1]
-    
+        items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
+        return items[0][1]
+        
     def mission_clicked(self, mission):
         pass
 
