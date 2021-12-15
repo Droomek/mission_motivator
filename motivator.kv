@@ -36,8 +36,8 @@
     font_size: "24sp"
     size_hint: .33, 1
 
-<MainScreen>
-    name: "main"
+<HomeScreen>
+    name: "home"
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -230,7 +230,7 @@
                     root.home_button_on()
                 on_release:
                     root.home_button_off()
-                    root.manager.current = 'main'
+                    root.manager.current = 'home'
                     root.manager.transition.direction = 'right'
                 Image:
                     id: home_image
@@ -317,7 +317,7 @@
                     root.home_button_on()
                 on_release:
                     root.home_button_off()
-                    root.manager.current = 'main'
+                    root.manager.current = 'home'
                     root.manager.transition.direction = 'right'
                 Image:
                     id: home_image

@@ -114,11 +114,8 @@ class MissionCalculations(ScreenManager):
 
     def m_earning():
         doc_benefit = 0
-        if os.path.isfile('mission_data.db'):
-            conn = sqlite3.connect('mission_data.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM mission_data")
-            items = c.fetchall()
+        items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
+        if items:
             mission = items[0][0]
             range = items[0][1]
             spec = items[0][2]
@@ -134,8 +131,6 @@ class MissionCalculations(ScreenManager):
                 doc_benefit = 0
 
             earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit
-
-            conn.close()
         else:
             earning = 0
 
@@ -145,7 +140,7 @@ class MissionCalculations(ScreenManager):
 Builder.load_file('motivator.kv')
 
 # Main screen ------------------------------------------------------------------------------------------------------
-class MainScreen(Screen):
+class HomeScreen(Screen):
     mission_type = StringProperty()
     today_data = StringProperty()
     mission_day = StringProperty()
@@ -154,8 +149,8 @@ class MainScreen(Screen):
     
 
     def __init__(self, **kwargs):
-        super(MainScreen, self).__init__(**kwargs)
-        self.mission_type = MainScreen.m_type()
+        super(HomeScreen, self).__init__(**kwargs)
+        self.mission_type = HomeScreen.m_type()
         self.today_data = f"{str(date.today())}"
         if MissionCalculations.whole_days() == -1:
             self.mission_day = "wybierz datę"
@@ -164,7 +159,7 @@ class MainScreen(Screen):
         self.mission_earning = "{:.2f} zł.".format(MissionCalculations.m_earning())
         
         if os.path.isfile('mission_data.db'):
-            MainScreen.pie_chart()
+            HomeScreen.pie_chart()
             chart = self.ids.chart
             chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
         
@@ -184,10 +179,10 @@ class MainScreen(Screen):
         
         self.ids.out_mission_label.text = out_days
         if os.path.isfile('mission_data.db'):
-            MainScreen.save_out_days(out_days)
+            HomeScreen.save_out_days(out_days)
     
         self.ids.mission_day_label.text = f"{str(MissionCalculations.mission_day())} dzień z {str(MissionCalculations.whole_days())} dni misji"
-        MainScreen.pie_chart()
+        HomeScreen.pie_chart()
         chart = self.manager.screens[main].ids.chart
         chart.clear_widgets()
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
@@ -272,7 +267,7 @@ class SettingScreen(Screen):
     def __init__(self, **kwargs):
         super(SettingScreen, self).__init__(**kwargs)
         if os.path.isfile('mission_data.db'):
-            self.mission_text = MainScreen.m_type()
+            self.mission_text = HomeScreen.m_type()
             self.start_year_text = SettingScreen.year(MissionCalculations.start_date())
             self.start_month_text = SettingScreen.month(MissionCalculations.start_date())
             self.start_day_text =  SettingScreen.day(MissionCalculations.start_date())
@@ -393,13 +388,13 @@ class SettingScreen(Screen):
                 conn.commit()
                 conn.close()
             
-            self.manager.current = 'main'
+            self.manager.current = 'home'
             self.manager.transition.direction = 'right'
 
-        self.manager.screens[main].ids.mission_label.text = "{}".format(MainScreen.m_type())
+        self.manager.screens[main].ids.mission_label.text = "{}".format(HomeScreen.m_type())
         self.manager.screens[main].ids.earning_label.text = "{:.2f} zł.".format(MissionCalculations.m_earning())
         
-        MainScreen.pie_chart()
+        HomeScreen.pie_chart()
         chart = self.manager.screens[main].ids.chart
         chart.clear_widgets()
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
@@ -494,10 +489,10 @@ class Motivator(App):
         sm = ScreenManager()
         if not os.path.isfile('mission_data.db'):
             sm.add_widget(SettingScreen(name='settings'))
-            sm.add_widget(MainScreen(name='main'))
+            sm.add_widget(HomeScreen(name='home'))
             sm.add_widget(InfoScreen(name='info'))
         else:
-            sm.add_widget(MainScreen(name='main'))
+            sm.add_widget(HomeScreen(name='home'))
             sm.add_widget(SettingScreen(name='settings'))
             sm.add_widget(InfoScreen(name='info'))
         return sm
