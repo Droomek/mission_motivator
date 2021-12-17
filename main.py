@@ -13,9 +13,9 @@ from kivy.lang import Builder
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from matplotlib import pyplot as plt
 from kivy.core.window import Window
-kivy.require ('1.4.0')
+# kivy.require ('1.4.0')
 
-Window.size = (360, 640)
+# Window.size = (360, 640)
 
 LOWEST_EARNING = 4110
 
@@ -101,13 +101,9 @@ class MissionCalculations(ScreenManager):
             return -1
     
     def get_mission_days_out():
-        if os.path.isfile('mission_data.db'):
-            conn = sqlite3.connect('mission_data.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM mission_data")
-            items = c.fetchall()
+        items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
+        if items:
             days = items[0][6]
-            conn.close()
         else:
             days = "0"
         return days

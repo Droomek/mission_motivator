@@ -1,3 +1,6 @@
+tests/
 venv/
 mission_data.db
 test.py
+.buildozer
+buildozer.spec
