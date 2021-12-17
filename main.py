@@ -13,9 +13,8 @@ from kivy.lang import Builder
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from matplotlib import pyplot as plt
 from kivy.core.window import Window
-# kivy.require ('1.4.0')
 
-# Window.size = (360, 640)
+Window.size = (360, 640)
 
 LOWEST_EARNING = 4110
 
@@ -221,14 +220,14 @@ class HomeScreen(Screen):
             days = "dni"
 
         plt.figure(facecolor = grey)
-        plt.title('pozostało:', color='white', fontsize=17)
+        plt.title('pozostało:', color='white', fontsize= 45)
 
-        plt.pie(slices, labels=labels, textprops={'color': 'white', 'fontsize':15}, colors=colors, startangle= 90, counterclock=False, labeldistance=1.2)
+        plt.pie(slices, labels=labels, textprops={'color': 'white', 'fontsize':40}, colors=colors, startangle= 90, counterclock=False, labeldistance=1.2)
         centre_circle =plt.Circle((0, 0), 0.80, fc=grey)
         fig = plt.gcf()
         fig.gca().add_artist(centre_circle)
-        plt.text(0, .1, rmd, ha='center', color='white', fontsize=18)
-        plt.text(0, -.3, days, ha='center', color='white', fontsize=15)
+        plt.text(0, .1, rmd, ha='center', color='white', fontsize=45)
+        plt.text(0, -.3, days, ha='center', color='white', fontsize=40)
 
     def home_button_on(self):
         self.ids.home_image.source = "img/home_white.png"
@@ -349,12 +348,12 @@ class SettingScreen(Screen):
         
             layout = GridLayout(cols = 1, padding =10)
             popupLabel = Label(font_size = "20sp", text = SettingScreen.message(mission, range, start_date, end_date))
-            closeButton = Button(text = "OK", font_size = "20sp", size_hint =(None, None), size =(250, 70), background_color = (97/255,131/255,88/255,1))
+            closeButton = Button(text = "OK", font_size = "20sp", size_hint =(None, None), size =("250sp", "70sp"), background_color = (97/255,131/255,88/255,1))
             layout.add_widget(popupLabel)
             layout.add_widget(closeButton)
-            popup = Popup(title = "Uwaga !!!", title_size = 20,
+            popup = Popup(title = "Uwaga !!!", title_size = "20sp",
                         content =layout, separator_color = (97/255,131/255,88/255,1),
-                        size_hint =(None, None), size =(300, 300)
+                        size_hint =(None, None), size =("300sp", "300sp")
                         )
             popup.open()
             closeButton.bind(on_press = popup.dismiss)
