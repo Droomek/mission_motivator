@@ -16,6 +16,8 @@ from kivy.core.window import Window
 
 Window.size = (360, 640)
 
+# Khaki color RGB 97,131,88  HEX #618358
+
 LOWEST_EARNING = 4110
 
 CONTINGENT_DICT = {
@@ -226,7 +228,7 @@ class HomeScreen(Screen):
         centre_circle =plt.Circle((0, 0), 0.80, fc=grey)
         fig = plt.gcf()
         fig.gca().add_artist(centre_circle)
-        plt.text(0, .1, rmd, ha='center', color='white', fontsize=45)
+        plt.text(0, .1, rmd, ha='center', color='white', fontsize=50)
         plt.text(0, -.3, days, ha='center', color='white', fontsize=40)
 
     def home_button_on(self):
