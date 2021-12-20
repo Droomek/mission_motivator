@@ -13,10 +13,11 @@ from kivy.lang import Builder
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from matplotlib import pyplot as plt
 from kivy.core.window import Window
+kivy.require ( '1.9.0' )
 
-Window.size = (360, 640)
-
+# Window.size = (360, 640)
 # Khaki color RGB 97,131,88  HEX #618358
+# buildozer android debug deploy run
 
 LOWEST_EARNING = 4110
 
@@ -59,7 +60,6 @@ class MissionCalculations(ScreenManager):
             conn.close()
             return items
 
-    
     def start_date():
             items =  MissionCalculations.database_exe("SELECT * FROM mission_data")
             if items:
@@ -144,7 +144,6 @@ class HomeScreen(Screen):
     mission_earning = StringProperty()
     out_mission_days = StringProperty()
     
-
     def __init__(self, **kwargs):
         super(HomeScreen, self).__init__(**kwargs)
         self.mission_type = HomeScreen.m_type()
