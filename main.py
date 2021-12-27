@@ -17,7 +17,6 @@ kivy.require ( '1.9.0' )
 
 # Window.size = (360, 640)
 # Khaki color RGB 97,131,88  HEX #618358
-# buildozer android debug deploy run
 
 LOWEST_EARNING = 4110
 
@@ -161,6 +160,9 @@ class HomeScreen(Screen):
         
         self.out_mission_days = MissionCalculations.get_mission_days_out()
     
+    def date_today(self):
+        return date.today()
+    
     def mission_out_days(self, sign, days):
         if sign == "-":
             if int(days) > 0:
@@ -288,7 +290,7 @@ class SettingScreen(Screen):
     def month(date):
         month_date = (str(date).split(","))
         num = f"{month_date[0][5]}{month_date[0][6]}"
-        if num == "01" or num == "02" or num == "03" or num == "04" or num == "05" or num == "06" or num == "07" or num == "08" or num == "09":
+        if num in ("01", "02", "03", "04", "05", "06", "07", "08", "09"):
             month_num = NUM_DICT[num]
         else:
             month_num = num
@@ -301,7 +303,7 @@ class SettingScreen(Screen):
     def day(date):
         day_date = (str(date).split(","))
         num = f"{day_date[0][8]}{day_date[0][9]}"
-        if num == "01" or num == "02" or num == "03" or num == "04" or num == "05" or num == "06" or num == "07" or num == "08" or num == "09":
+        if num in ("01", "02", "03", "04", "05", "06", "07", "08", "09"):
             day_num = NUM_DICT[num]
         else:
             day_num = num

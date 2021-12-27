@@ -38,6 +38,7 @@
 
 <HomeScreen>
     name: "home"
+    on_pre_enter: self.today_data = str(self.date_today())
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -49,6 +50,7 @@
             text: root.mission_type
             font_size: "32sp"
         MyLabel:
+            id: today_data_label
             text: root.today_data
         MyLabel:
             id: mission_day_label
