@@ -3,6 +3,7 @@ import sqlite3
 import kivy
 from datetime import date, datetime
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -146,7 +147,7 @@ class HomeScreen(Screen):
     def __init__(self, **kwargs):
         super(HomeScreen, self).__init__(**kwargs)
         self.mission_type = HomeScreen.m_type()
-        self.today_data = f"{str(date.today())}"
+        self.today_data = str(date.today())
         if MissionCalculations.whole_days() == -1:
             self.mission_day = "wybierz datę"
         else:
@@ -159,10 +160,7 @@ class HomeScreen(Screen):
             chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
         
         self.out_mission_days = MissionCalculations.get_mission_days_out()
-    
-    def date_today(self):
-        return date.today()
-    
+
     def mission_out_days(self, sign, days):
         if sign == "-":
             if int(days) > 0:
@@ -493,7 +491,9 @@ class Motivator(App):
             sm.add_widget(HomeScreen(name='home'))
             sm.add_widget(SettingScreen(name='settings'))
             sm.add_widget(InfoScreen(name='info'))
+        Clock.schedule_once(self.stop, 3600)
         return sm
+
 
 if __name__ == '__main__':
     Motivator().run()

@@ -38,7 +38,6 @@
 
 <HomeScreen>
     name: "home"
-    on_pre_enter: self.today_data = str(self.date_today())
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -223,7 +222,6 @@
             font_size: "24sp"
             on_press:
                 root.safe_clicked(mission_spinner.text, range_spinner.text, check_spec.active, check_doc.active, s_y_spinner.text, s_m_spinner.text, s_d_spinner.text, e_y_spinner.text, e_m_spinner.text, e_d_spinner.text)
-
         BoxLayout:
             padding: 0
             spacing: 0
