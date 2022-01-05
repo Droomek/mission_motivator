@@ -21,6 +21,8 @@ kivy.require ( '1.9.0' )
 
 LOWEST_EARNING = 4110
 
+WAR_BENEFIT = LOWEST_EARNING * 0.03
+
 CONTINGENT_DICT = {
     "PKW EUFOR Althea": 0,"PKW EUTM RCA": 0.70, "PKW Irak": 0.70, 
     "PKW IRINI": 0.70, "PKW KFOR": 0, "PKW Łotwa": 0, "PKW Morze Północne": 0, 
@@ -119,17 +121,25 @@ class MissionCalculations(ScreenManager):
             doc = items[0][3]
             
             multipiler = RANGE_DICT[range]
-          
-            if spec == 1:
-                doc_benefit = ((LOWEST_EARNING * 2.5) / 30) * MissionCalculations.mission_day()
-            elif doc == 1: 
-                doc_benefit = ((LOWEST_EARNING * 1.5) / 30) * MissionCalculations.mission_day()
+
+            if CONTINGENT_DICT[mission] == 0.70 and RANGE_DICT[range] > 2.00:
+                if spec == 1:
+                    doc_benefit = ((LOWEST_EARNING * 2.5) / 30) * MissionCalculations.mission_day()
+                elif doc == 1: 
+                    doc_benefit = ((LOWEST_EARNING * 1.5) / 30) * MissionCalculations.mission_day()
             else:
                 doc_benefit = 0
+            
+            if CONTINGENT_DICT[mission] == 0.70:
+                war_benefit_per_day = WAR_BENEFIT * MissionCalculations.mission_day()
+            else:
+                war_benefit_per_day = 0
+            
 
-            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit
+            earning = ((LOWEST_EARNING / 30) * multipiler * MissionCalculations.mission_day()) + (((LOWEST_EARNING * CONTINGENT_DICT[mission]) / 30) * MissionCalculations.mission_day()) + doc_benefit + war_benefit_per_day
         else:
             earning = 0
+        
 
         return earning
 
