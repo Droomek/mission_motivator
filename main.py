@@ -485,11 +485,11 @@ class Motivator(App):
     contingent_list = list(CONTINGENT_DICT.keys())
     range_list = list(RANGE_DICT.keys())
     year = int(date.today().year)
-    years_list = [str(x) for x in range(year-1, year+3)]
+    years_list = [str(x) for x in range(year-2, year+2)]
     months_list = list(MONTHS_DICT.keys())
     days_list = [str(x) for x in range(1, 32)]
     # TODO: change the list do to month
-    days_list_29 = [str(x) for x in range(1, 30)]
+    # days_list_29 = [str(x) for x in range(1, 30)]
     
     def build(self):
         sm = ScreenManager()
